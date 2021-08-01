@@ -2,6 +2,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Roact: Roact = require(ReplicatedStorage.Roact)
 
+local app = ReplicatedStorage.App
+	local Data = require(app.Data)
+
 local Hotbar = Roact.Component:extend("Hotbar")
 
 -- TODO: implement this
@@ -11,15 +14,59 @@ function Hotbar:init()
 end
 
 function Hotbar:render()
-	return Roact.createElement("Frame", {
-		Size = UDim2.new(1, 0, 0.1, 0),
-		Position = UDim2.new(0, 0, 1, 0),
-		AnchorPoint = Vector2.new(0, 1),
-	}, {
+	return Roact.createElement(Data.Consumer, {
+		render = function(data)
+			return Roact.createElement("Frame", {
+				Size = UDim2.new(0.6, 0, 0.1, 0),
+				Position = UDim2.new(0.5, 0, 1, 0),
+				AnchorPoint = Vector2.new(0.5, 1),
+			}, {
+				UIListLayout = Roact.createElement("UIListLayout", {
+					Padding = UDim.new(0.167, 0),
+					FillDirection = Enum.FillDirection.Horizontal,
+					HorizontalAlignment = Enum.HorizontalAlignment.Center,
+					VerticalAlignment = Enum.VerticalAlignment.Center,
+					SortOrder = Enum.SortOrder.LayoutOrder,
+				}),
 
-		-- reset board
-		-- score
-		-- time
+				MinesLeft = Roact.createElement("TextLabel", {
+					Size = UDim2.new(0.167, 0, 0.8, 0),
+					LayoutOrder = 1,
+		
+					Text = data.minesLeft:map(function(minesLeft)
+						return string.format("%03d", minesLeft)
+					end),
+					TextScaled = true,
+				}),
+				
+				Face = Roact.createElement("TextButton", {
+					Size = UDim2.new(0.167, 0, 0.8, 0),
+					LayoutOrder = 2,
+
+					Text = data.face,
+					TextScaled = true,
+
+					[Roact.Event.MouseButton1Click] = function(_rbxButton)
+						data:resetGame()
+					end
+				}, {
+					UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
+						AspectRatio = 1,
+						AspectType = Enum.AspectType.FitWithinMaxSize
+					})
+				}),
+
+				Time = Roact.createElement("TextLabel", {
+					Size = UDim2.new(0.167, 0, 0.8, 0),
+					LayoutOrder = 3,
+
+					Text = data.time:map(function(time)
+						return string.format("%03d", time)
+					end),
+					TextScaled = true
+				})
+			})
+		end
 	})
 end
 

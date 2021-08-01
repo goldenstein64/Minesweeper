@@ -1,3 +1,7 @@
 {
-  "commentAnchors.workspace.matchFiles": "src/**"
+  "commentAnchors.workspace.matchFiles": "src/**",
+  "testez-companion.runOnStartup": false,
+  "[lua]": {
+    "editor.insertSpaces": false
+  }
 }

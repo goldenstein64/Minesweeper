@@ -1,25 +1,16 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local Roact: Roact = require(ReplicatedStorage.Roact)
-local Event = require(ReplicatedStorage.Event)
+local load = require(ReplicatedStorage.DepLoader)
+	local Roact = load("Roact")
+	local Event = load("Event")
 
 local Space = require(script.Space)
 local DataCell = require(script.DataCell)
 
 local R = Random.new()
 
-local DataContext = Roact.createContext({
-	game = "starting",
-	cells = Space.new(),
-	time = 0,
-	minesLeft = 0,
-})
-
-local Data = {
-	Provider = DataContext.Provider,
-	Consumer = DataContext.Consumer
-}
+local Data = {}
 Data.__index = Data
 
 function Data.new(app)
@@ -38,29 +29,12 @@ function Data.new(app)
 	self.cellChanged = Event.new()
 	self.reseted = Event.new()
 
-	function self._setState(cell, newState)
-		cell.state = newState
-		cell.setStateCallback(newState)
-		if newState == "open" then
-			self.cellsLeft -= 1
-			if cell.surroundingMines == 0 then
-				cell:openSafeCells()
-			end
-		elseif newState == "flagged" then
-			self.setMinesLeft(self.minesLeft:getValue() - 1)
-		elseif newState == "closed" then
-			self.setMinesLeft(self.minesLeft:getValue() + 1)
-		end
-		self.cellChanged:Fire(cell)
-	end
-
 	local cells = Space.new()
 	for x = 1, self.size.X do
 		for y = 1, self.size.Y do
-			local cell = DataCell.new()
+			local cell = DataCell.new(self)
 			cell.cells = cells
 			cell.location = Vector2.new(x, y)
-			cell.setState = self._setState
 			cells:Set(x, y, cell)
 		end
 	end
@@ -125,6 +99,7 @@ function Data:endGame(finalCell)
 	assert(self.timerConn, "game is not started yet!")
 	self.timerConn:Disconnect()
 	self.timerConn = nil
+
 	self.game = "finished"
 	if finalCell then
 		finalCell:setState("mineHit")
@@ -132,6 +107,7 @@ function Data:endGame(finalCell)
 	else
 		self.setFace("😎")
 	end
+	self.setMinesLeft(0)
 end
 
 function Data:resetGame()

@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Roact: Roact = require(ReplicatedStorage.Roact)
+local load = require(ReplicatedStorage.DepLoader)
+	local Roact = load("Roact")
 
 local CellController = require(script.CellController)
 local Hotbar = require(script.Hotbar)
@@ -20,18 +21,24 @@ function App:init()
 end
 
 function App:render()
-	return Roact.createElement("ScreenGui", nil, {
-		MainWindow = Roact.createElement("Frame", {
-			Position = UDim2.new(0.5, 0, 0.5, 0),
-			Size = UDim2.new(0.8, 0, 0.8, 0),
-			AnchorPoint = Vector2.new(0.5, 0.5)
-		}, {
-			Data = Roact.createElement(Data.Provider, {
-				value = self.state.data
-			}, {
-				Cells = Roact.createElement(CellController),
-				Hotbar = Roact.createElement(Hotbar)
-			})
+	return Roact.createElement("Frame", {
+		Position = UDim2.new(0.5, 0, 0.5, 0),
+		Size = UDim2.new(1, 0, 1, 0),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundTransparency = 1,
+	}, {
+		UIListLayout = Roact.createElement("UIListLayout", {
+			Padding = UDim.new(0, 0),
+			FillDirection = Enum.FillDirection.Vertical,
+			HorizontalAlignment = Enum.HorizontalAlignment.Center,
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+		}),
+		
+		Cells = Roact.createElement(CellController, {
+			data = self.state.data
+		}),
+		Hotbar = Roact.createElement(Hotbar, {
+			data = self.state.data
 		})
 	})
 end

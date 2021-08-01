@@ -1,0 +1,6 @@
+{
+  "name": "Minesweeper",
+  "tree": {
+    "$path": "src"
+  }
+}

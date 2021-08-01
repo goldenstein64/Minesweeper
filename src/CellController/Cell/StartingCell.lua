@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Roact: Roact = require(ReplicatedStorage.Roact)
+local load = require(ReplicatedStorage.DepLoader)
+	local Roact = load("Roact")
 
 local function StartingCell(props)
 	return Roact.createElement("TextButton", {

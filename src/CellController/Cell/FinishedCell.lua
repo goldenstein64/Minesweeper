@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Roact: Roact = require(ReplicatedStorage.Roact)
+local load = require(ReplicatedStorage.DepLoader)
+	local Roact = load("Roact")
 
 local function FinishedCell(props)
 	return Roact.createElement("TextButton", {
@@ -32,7 +33,7 @@ local function FinishedCell(props)
 
 		BackgroundColor3 = props.state:map(function(state)
 			if state == "open" then
-				return Color3.fromRGB(192, 178, 102)
+				return Color3.fromRGB(235, 225, 171)
 			elseif state == "mineHit" then
 				return Color3.fromRGB(201, 46, 46)
 			end

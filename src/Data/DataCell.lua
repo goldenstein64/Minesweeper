@@ -24,8 +24,9 @@ end
 local DataCell = {}
 DataCell.__index = DataCell
 
-function DataCell.new()
+function DataCell.new(data)
 	local self = {
+		Data = data,
 		hasMine = false,
 		state = "closed",
 		surroundingMines = -1,
@@ -34,6 +35,22 @@ function DataCell.new()
 	setmetatable(self, DataCell)
 
 	return self
+end
+
+function DataCell:setState(newState)
+	self.state = newState
+		self.setStateCallback(newState)
+		if newState == "open" then
+			self.Data.cellsLeft -= 1
+			if self.surroundingMines == 0 then
+				self:openSafeCells()
+			end
+		elseif newState == "flagged" then
+			self.Data.setMinesLeft(self.Data.minesLeft:getValue() - 1)
+		elseif newState == "closed" then
+			self.Data.setMinesLeft(self.Data.minesLeft:getValue() + 1)
+		end
+		self.Data.cellChanged:Fire(self)
 end
 
 function DataCell:openSafeCells()

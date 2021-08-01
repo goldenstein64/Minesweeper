@@ -1,5 +1,5 @@
 {
-  "name": "Minesweeper",
+  "name": "build",
   "tree": {
     "$className": "DataModel",
 
@@ -7,7 +7,7 @@
       "$className": "ReplicatedStorage",
       "$path": "test/shared",
 
-      "App": {
+      "Minesweeper": {
         "$path": "src"
       }
     },

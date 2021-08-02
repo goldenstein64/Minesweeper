@@ -4,6 +4,28 @@ local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
 
 local function PlayingCell(props)
+	local function onOpen(_rbxButton)
+		local state = props.state:getValue()
+		if state == "closed" then
+			props.data:setState("open")
+			if props.data.surroundingMines == 0 then
+				props.data:openSafeCells()
+			end
+		elseif state == "open" then
+			props.data:attemptOpenUnflaggedNeighbors()
+		end
+	end
+
+	local function onFlag(_rbxButton)
+		local state = props.state:getValue()
+		
+		if state == "closed" then
+			props.data:setState("flagged")
+		elseif state == "flagged" then
+			props.data:setState("closed")
+		end
+	end
+
 	return Roact.createElement("TextButton", {
 		Text = props.state:map(function(state)
 			if state == "open" then
@@ -34,27 +56,11 @@ local function PlayingCell(props)
 		BorderMode = Enum.BorderMode.Middle,
 		BorderColor3 = Color3.fromRGB(0, 0, 0),
 
-		[Roact.Event.MouseButton1Click] = function(_rbxButton)
-			local state = props.state:getValue()
-			if state == "closed" then
-				props.data:setState("open")
-				if props.data.surroundingMines == 0 then
-					props.data:openSafeCells()
-				end
-			elseif state == "open" then
-				props.data:attemptOpenUnflaggedNeighbors()
-			end
-		end,
+		[Roact.Event.MouseButton1Click] = onOpen,
+		[Roact.Event.MouseButton2Click] = onFlag,
 
-		[Roact.Event.MouseButton2Click] = function(_rbxButton)
-			local state = props.state:getValue()
-			
-			if state == "closed" then
-				props.data:setState("flagged")
-			elseif state == "flagged" then
-				props.data:setState("closed")
-			end
-		end
+		[Roact.Event.TouchTap] = onOpen,
+		[Roact.Event.TouchLongPress] = onFlag
 	})
 end
 

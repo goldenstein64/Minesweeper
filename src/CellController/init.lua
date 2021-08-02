@@ -3,6 +3,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
 
+local app = script.Parent
+	local GameLoop = require(app.GameLoop)
+
 local Cell = require(script.Cell)
 
 local CellController = Roact.Component:extend("CellController")
@@ -51,7 +54,7 @@ function CellController:render()
 		self.cellChangedConn = data.cellChanged:Connect(function(cell)
 			if cell.state == "open" then
 				self.cellChangedConn:Disconnect()
-				data:startGame(cell)
+				GameLoop.start(data, cell)
 				self:setState({
 					game = "playing"
 				})
@@ -63,7 +66,7 @@ function CellController:render()
 				if cell.hasMine or data.cellsLeft == 0 then
 					self.cellChangedConn:Disconnect()
 					self.resetedConn:Disconnect()
-					data:endGame(cell.hasMine and cell or nil)
+					GameLoop.finish(data, cell.hasMine and cell or nil)
 					self:setState({
 						game = "finished"
 					})

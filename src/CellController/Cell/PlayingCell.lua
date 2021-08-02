@@ -39,10 +39,10 @@ local function PlayingCell(props)
 			if state == "closed" then
 				props.data:setState("open")
 				if props.data.surroundingMines == 0 then
-					props.data:openSafeCells(props.location)
+					props.data:openSafeCells()
 				end
 			elseif state == "open" then
-				props.data:attemptOpenUnflaggedNeighbors(props.data)
+				props.data:attemptOpenUnflaggedNeighbors()
 			end
 		end,
 

@@ -14,9 +14,9 @@ App.defaultProps = {
 	mineCount = 10
 }
 
-function App:init()
+function App:init(props)
 	self:setState({
-		data = Data.new(self)
+		data = Data.new(props)
 	})
 end
 

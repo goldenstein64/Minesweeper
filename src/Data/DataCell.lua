@@ -24,12 +24,14 @@ end
 local DataCell = {}
 DataCell.__index = DataCell
 
-function DataCell.new(data)
+function DataCell.new(data, x, y)
 	local self = {
-		Data = data,
+		data = data,
+		cells = data.cells,
 		hasMine = false,
 		state = "closed",
 		surroundingMines = -1,
+		position = Vector2.new(x, y)
 	}
 
 	setmetatable(self, DataCell)
@@ -39,18 +41,11 @@ end
 
 function DataCell:setState(newState)
 	self.state = newState
-		self.setStateCallback(newState)
-		if newState == "open" then
-			self.Data.cellsLeft -= 1
-			if self.surroundingMines == 0 then
-				self:openSafeCells()
-			end
-		elseif newState == "flagged" then
-			self.Data.setMinesLeft(self.Data.minesLeft:getValue() - 1)
-		elseif newState == "closed" then
-			self.Data.setMinesLeft(self.Data.minesLeft:getValue() + 1)
-		end
-		self.Data.cellChanged:Fire(self)
+	if newState == "open" and self.surroundingMines == 0 then
+		self:openSafeCells()
+	end
+	self.setStateCallback(newState)
+	self.data:onStateChanged(self, newState)
 end
 
 function DataCell:openSafeCells()
@@ -91,9 +86,9 @@ end
 function DataCell:getNeighbors()
 	local neighbors = {}
 	for _, offset in ipairs(offsets) do
-		local newLocation = self.location + offset
+		local newPosition = self.position + offset
 
-		local cell = self.cells:Get(newLocation.X, newLocation.Y)
+		local cell = self.cells:Get(newPosition.X, newPosition.Y)
 		if not cell then continue end
 
 		table.insert(neighbors, cell)

@@ -16,28 +16,28 @@ function Cell:init(props)
 	props.data.setStateCallback = setState
 end
 
+local gameStateToCell = {
+	starting = StartingCell,
+	playing = PlayingCell,
+	finished = FinishedCell
+}
+
 function Cell:render()
 	local props = self.props
 
 	local size = props.size
-	local location = props.data.location
+	local position = props.data.position
 	
 	local newProps = {
-		layoutOrder = size.X * location.Y + location.X,
+		layoutOrder = size.X * position.Y + position.X,
 		state = self.cellState
 	}
 	for k, v in pairs(props) do
 		newProps[k] = v
 	end
 
-	local gameState = props.game
-	if gameState == "starting" then
-		return Roact.createElement(StartingCell, newProps)
-	elseif gameState == "playing" then
-		return Roact.createElement(PlayingCell, newProps)
-	elseif gameState == "finished" then
-		return Roact.createElement(FinishedCell, newProps)
-	end
+	local derivedCell = gameStateToCell[props.game]
+	return Roact.createElement(derivedCell, newProps)
 end
 
 return Cell

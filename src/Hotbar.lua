@@ -3,6 +3,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
 
+local app = script.Parent
+	local GameLoop = require(app.GameLoop)
+
 local Hotbar = Roact.Component:extend("Hotbar")
 
 Hotbar.defaultProps = {
@@ -46,7 +49,7 @@ function Hotbar:render()
 			TextScaled = true,
 
 			[Roact.Event.MouseButton1Click] = function(_rbxButton)
-				data:resetGame()
+				GameLoop.reset(data)
 			end
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {

@@ -28,7 +28,7 @@ local presets = {
   }
 }
 
-local gameElement = Roact.createElement(Minesweeper, presets.hard)
+local gameElement = Roact.createElement(Minesweeper, presets.easy)
 
 local hostElement = Roact.createElement("ScreenGui", nil, {
   ParentFrame = Roact.createElement("Frame", {

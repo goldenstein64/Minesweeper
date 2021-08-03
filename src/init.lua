@@ -32,13 +32,14 @@ function App:render()
 			FillDirection = Enum.FillDirection.Vertical,
 			HorizontalAlignment = Enum.HorizontalAlignment.Center,
 			VerticalAlignment = Enum.VerticalAlignment.Center,
+			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
 		
 		Cells = Roact.createElement(CellController, {
-			data = self.state.data
+			data = self.state.data,
 		}),
 		Hotbar = Roact.createElement(Hotbar, {
-			data = self.state.data
+			data = self.state.data,
 		})
 	})
 end

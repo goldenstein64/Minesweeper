@@ -9,7 +9,7 @@ local app = script.Parent
 local Hotbar = Roact.Component:extend("Hotbar")
 
 Hotbar.defaultProps = {
-	layoutOrder = 2
+	layoutOrder = 1
 }
 
 function Hotbar:render()
@@ -20,10 +20,12 @@ function Hotbar:render()
 		Position = UDim2.new(0.5, 0, 1, 0),
 		AnchorPoint = Vector2.new(0.5, 1),
 
+		BackgroundTransparency = 1,
+
 		LayoutOrder = self.props.layoutOrder
 	}, {
 		UIListLayout = Roact.createElement("UIListLayout", {
-			Padding = UDim.new(0.1, 0),
+			Padding = UDim.new(0.05, 0),
 			FillDirection = Enum.FillDirection.Horizontal,
 			HorizontalAlignment = Enum.HorizontalAlignment.Center,
 			VerticalAlignment = Enum.VerticalAlignment.Center,
@@ -31,7 +33,7 @@ function Hotbar:render()
 		}),
 
 		MinesLeft = Roact.createElement("TextLabel", {
-			Size = UDim2.new(0.1, 0, 0.8, 0),
+			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 1,
 
 			Text = data.minesLeft:map(function(minesLeft)
@@ -42,7 +44,7 @@ function Hotbar:render()
 		}),
 		
 		Face = Roact.createElement("TextButton", {
-			Size = UDim2.new(0.1, 0, 0.8, 0),
+			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 2,
 
 			Text = data.face,
@@ -59,7 +61,7 @@ function Hotbar:render()
 		}),
 
 		Time = Roact.createElement("TextLabel", {
-			Size = UDim2.new(0.1, 0, 0.8, 0),
+			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 3,
 
 			Text = data.time:map(function(time)

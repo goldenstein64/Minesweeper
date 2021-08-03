@@ -11,7 +11,7 @@ local Cell = require(script.Cell)
 local CellController = Roact.Component:extend("CellController")
 
 CellController.defaultProps = {
-	layoutOrder = 1
+	layoutOrder = 2
 }
 
 function CellController:init()

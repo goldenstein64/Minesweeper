@@ -22,7 +22,6 @@ function GameLoop.start(data, startingCell)
 
 	local size = data.size
 	local openCellSet = Space.new()
-	local mineSet = Space.new()
 
 	openCellSet:Set(startingCell.position.X, startingCell.position.Y, true)
 	for _, neighbor in ipairs(startingCell:getNeighbors()) do
@@ -35,25 +34,18 @@ function GameLoop.start(data, startingCell)
 		repeat
 			x = R:NextInteger(1, size.X)
 			y = R:NextInteger(1, size.Y)
-		until not openCellSet:Get(x, y) and not mineSet:Get(x, y)
+		until not openCellSet:Get(x, y)
 		local cell = data.cells:Get(x, y)
 		cell.hasMine = true
-		mineSet:Set(x, y, true)
-	end
 
-	for _, column in pairs(data.cells.Data) do
-		for _, cell in pairs(column) do
-			local surroundingMineCount = 0
-			for _, neighbor in ipairs(cell:getNeighbors()) do
-				if neighbor.hasMine then
-					surroundingMineCount += 1
-				end
-			end
-
-			cell.surroundingMines = surroundingMineCount
+		for _, neighbor in ipairs(cell:getNeighbors()) do
+			neighbor.surroundingMines += 1
 		end
+
+		openCellSet:Set(x, y, true)
 	end
 
+	data.sideEffects = true
 	startingCell:openSafeCells()
 end
 
@@ -62,20 +54,22 @@ function GameLoop.finish(data, finalCell)
 	data.timerConn:Disconnect()
 	data.timerConn = nil
 
+	data.sideEffects = false
+
 	if finalCell then
 		finalCell:setState("mineHit")
 		data.setFace("💀")
 	else
 		data.setFace("😎")
+		data.setMinesLeft(0)
 	end
-	data.setMinesLeft(0)
 end
 
 function GameLoop.reset(data)
 	for _, column in pairs(data.cells.Data) do
 		for _, cell in pairs(column) do
 			cell.hasMine = false
-			cell.surroundingMines = -1
+			cell.surroundingMines = 0
 			cell:setState("closed")
 		end
 	end
@@ -84,7 +78,8 @@ function GameLoop.reset(data)
 		data.timerConn:Disconnect()
 		data.timerConn = nil
 	end
-	
+
+	data.sideEffects = false
 	data.setTime(0)
 	data.setMinesLeft(data.mineCount)
 	data.cellsLeft = data.size.X * data.size.Y - data.mineCount

@@ -8,9 +8,6 @@ local function PlayingCell(props)
 		local state = props.state:getValue()
 		if state == "closed" then
 			props.data:setState("open")
-			if props.data.surroundingMines == 0 then
-				props.data:openSafeCells()
-			end
 		elseif state == "open" then
 			props.data:attemptOpenUnflaggedNeighbors()
 		end

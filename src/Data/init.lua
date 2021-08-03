@@ -13,7 +13,9 @@ Data.__index = Data
 function Data.new(props)
 	local self = {
 		size = props.size,
-		mineCount = props.mineCount
+		mineCount = props.mineCount,
+
+		sideEffects = false,
 	}
 
 	self.cellsLeft = self.size.X * self.size.Y - self.mineCount

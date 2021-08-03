@@ -32,10 +32,9 @@ local gameElement = Roact.createElement(Minesweeper, presets.easy)
 
 local hostElement = Roact.createElement("ScreenGui", nil, {
   ParentFrame = Roact.createElement("Frame", {
-    Size = UDim2.new(0.8, 0, 0.8, 0),
+    Size = UDim2.new(1, 0, 1, 0),
     Position = UDim2.new(0.5, 0, 0.5, 0),
     AnchorPoint = Vector2.new(0.5, 0.5),
-    BackgroundTransparency = 1
   }, {
     Minesweeper = gameElement
   })

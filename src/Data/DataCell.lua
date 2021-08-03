@@ -30,7 +30,7 @@ function DataCell.new(data, x, y)
 		cells = data.cells,
 		hasMine = false,
 		state = "closed",
-		surroundingMines = -1,
+		surroundingMines = 0,
 		position = Vector2.new(x, y)
 	}
 
@@ -49,6 +49,8 @@ function DataCell:setState(newState)
 end
 
 function DataCell:openSafeCells()
+	if not self.data.sideEffects then return end
+
 	local closedCells = {}
 	local openCells = {}
 
@@ -72,6 +74,8 @@ function DataCell:openSafeCells()
 end
 
 function DataCell:attemptOpenUnflaggedNeighbors()
+	if not self.data.sideEffects then return end
+
 	local surroundingFlags = getSurroundingFlags(self)
 
 	if self.surroundingMines ~= surroundingFlags then return end

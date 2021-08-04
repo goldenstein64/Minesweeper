@@ -52,17 +52,24 @@ function CellController:render()
 
 	if self.state.game == "starting" then
 		self.cellChangedConn = data.cellChanged:Connect(function(cell)
-			if cell.state == "open" then
+			if cell.state:getValue() == "open" then
 				self.cellChangedConn:Disconnect()
 				GameLoop.start(data, cell)
-				self:setState({
-					game = "playing"
-				})
+				if data.cellsLeft == 0 then
+					GameLoop.finish(data, nil)
+					self:setState({
+						game = "finished"
+					})
+				else
+					self:setState({
+						game = "playing"
+					})
+				end
 			end
 		end)
 	elseif self.state.game == "playing" then
 		self.cellChangedConn = data.cellChanged:Connect(function(cell)
-			if cell.state == "open" then
+			if cell.state:getValue() == "open" then
 				if cell.hasMine or data.cellsLeft == 0 then
 					self.cellChangedConn:Disconnect()
 					self.resetedConn:Disconnect()

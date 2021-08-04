@@ -25,8 +25,8 @@ function GameLoop.start(data, startingCell)
 
 	openCellSet:Set(startingCell.position.X, startingCell.position.Y, true)
 	for _, neighbor in ipairs(startingCell:getNeighbors()) do
-		local location = neighbor.position
-		openCellSet:Set(location.X, location.Y, true)
+		local newPosition = neighbor.position
+		openCellSet:Set(newPosition.X, newPosition.Y, true)
 	end
 
 	for _i = 1, data.mineCount do

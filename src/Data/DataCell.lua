@@ -1,3 +1,9 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local load = require(ReplicatedStorage.DepLoader)
+	local Event = load("Event")
+	local Roact = load("Roact")
+
 local offsets = {
 	Vector2.new(1, 1),
 	Vector2.new(1, 0),
@@ -13,7 +19,7 @@ local function getSurroundingFlags(self)
 	local flaggedCount = 0
 
 	for _, neighbor in ipairs(self:getNeighbors()) do
-		if neighbor.state == "flagged" then
+		if neighbor.state:getValue() == "flagged" then
 			flaggedCount += 1
 		end
 	end
@@ -29,10 +35,12 @@ function DataCell.new(data, x, y)
 		data = data,
 		cells = data.cells,
 		hasMine = false,
-		state = "closed",
 		surroundingMines = 0,
-		position = Vector2.new(x, y)
+		position = Vector2.new(x, y),
+		changed = Event.new()
 	}
+
+	self.state, self.setRawState = Roact.createBinding("closed")
 
 	setmetatable(self, DataCell)
 
@@ -40,16 +48,11 @@ function DataCell.new(data, x, y)
 end
 
 function DataCell:setState(newState)
-	self.state = newState
-	if newState == "open" and self.surroundingMines == 0 then
-		self:openSafeCells()
-	end
-	self.setStateCallback(newState)
-	self.data:onStateChanged(self, newState)
+	self.setRawState(newState)
+	self.changed:Fire(newState)
 end
 
 function DataCell:openSafeCells()
-	if not self.data.sideEffects then return end
 
 	local closedCells = {}
 	local openCells = {}
@@ -60,7 +63,7 @@ function DataCell:openSafeCells()
 		openCells[currentCell] = nil
 
 		for _, neighbor in ipairs(currentCell:getNeighbors()) do
-			if closedCells[neighbor] or neighbor.state == "open" then continue end
+			if closedCells[neighbor] or neighbor.state:getValue() == "open" then continue end
 
 			neighbor:setState("open")
 
@@ -74,15 +77,17 @@ function DataCell:openSafeCells()
 end
 
 function DataCell:attemptOpenUnflaggedNeighbors()
-	if not self.data.sideEffects then return end
 
 	local surroundingFlags = getSurroundingFlags(self)
 
 	if self.surroundingMines ~= surroundingFlags then return end
 
 	for _, neighbor in ipairs(self:getNeighbors()) do
-		if neighbor.state == "closed" then
+		if neighbor.state:getValue() == "closed" then
 			neighbor:setState("open")
+			if neighbor.surroundingMines == 0 then
+				neighbor:openSafeCells()
+			end
 		end
 	end
 end

@@ -5,7 +5,7 @@ local load = require(ReplicatedStorage.DepLoader)
 
 local function FinishedCell(props)
 	return Roact.createElement("TextButton", {
-		Text = props.state:map(function(state)
+		Text = props.data.state:map(function(state)
 			if state == "open" then
 				if props.data.hasMine then
 					return "💣"
@@ -31,7 +31,7 @@ local function FinishedCell(props)
 
 		LayoutOrder = props.layoutOrder,
 
-		BackgroundColor3 = props.state:map(function(state)
+		BackgroundColor3 = props.data.state:map(function(state)
 			if state == "open" then
 				return Color3.fromRGB(235, 225, 171)
 			elseif state == "mineHit" then

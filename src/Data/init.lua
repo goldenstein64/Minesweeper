@@ -14,8 +14,6 @@ function Data.new(props)
 	local self = {
 		size = props.size,
 		mineCount = props.mineCount,
-
-		sideEffects = false,
 	}
 
 	self.cellsLeft = self.size.X * self.size.Y - self.mineCount
@@ -32,6 +30,9 @@ function Data.new(props)
 		for y = 1, self.size.Y do
 			local cell = DataCell.new(self, x, y)
 			cells:Set(x, y, cell)
+			cell.changed:Connect(function(newState)
+				self:onStateChanged(cell, newState)
+			end)
 		end
 	end
 

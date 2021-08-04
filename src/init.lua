@@ -3,21 +3,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
 
+local Data = require(script.Data)
 local CellController = require(script.CellController)
 local Hotbar = require(script.Hotbar)
-local Data = require(script.Data)
 
 local App = Roact.Component:extend("App")
 
-App.defaultProps = {
-	size = Vector2.new(10, 10),
-	mineCount = 10
-}
-
 function App:init(props)
-	self:setState({
-		data = Data.new(props)
-	})
+	self.data = Data.new(props)
 end
 
 function App:render()
@@ -36,10 +29,10 @@ function App:render()
 		}),
 		
 		Cells = Roact.createElement(CellController, {
-			data = self.state.data,
+			data = self.data,
 		}),
 		Hotbar = Roact.createElement(Hotbar, {
-			data = self.state.data,
+			data = self.data,
 		})
 	})
 end

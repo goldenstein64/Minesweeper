@@ -5,16 +5,19 @@ local load = require(ReplicatedStorage.DepLoader)
 
 local function PlayingCell(props)
 	local function onOpen(_rbxButton)
-		local state = props.state:getValue()
+		local state = props.data.state:getValue()
 		if state == "closed" then
 			props.data:setState("open")
+			if props.data.surroundingMines == 0 then
+				props.data:openSafeCells()
+			end
 		elseif state == "open" then
 			props.data:attemptOpenUnflaggedNeighbors()
 		end
 	end
 
 	local function onFlag(_rbxButton)
-		local state = props.state:getValue()
+		local state = props.data.state:getValue()
 		
 		if state == "closed" then
 			props.data:setState("flagged")
@@ -24,7 +27,7 @@ local function PlayingCell(props)
 	end
 
 	return Roact.createElement("TextButton", {
-		Text = props.state:map(function(state)
+		Text = props.data.state:map(function(state)
 			if state == "open" then
 				if props.data.hasMine then
 					return "💣"
@@ -42,7 +45,7 @@ local function PlayingCell(props)
 
 		LayoutOrder = props.layoutOrder,
 
-		BackgroundColor3 = props.state:map(function(state)
+		BackgroundColor3 = props.data.state:map(function(state)
 			if state == "open" then
 				return Color3.fromRGB(230, 230, 230)
 			else

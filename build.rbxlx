@@ -789,99 +789,172 @@ return DepLoader]]></ProtectedString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Event</string>
 					<string name="ScriptGuid">{4868972E-8DCF-4B51-8DE6-7500635FCF97}</string>
-					<ProtectedString name="Source"><![CDATA[local Connection = require(script.Connection)
+					<ProtectedString name="Source"><![CDATA[--#selene: allow(unused_variable)
+--------------------------------------------------------------------------------
+--               Batched Yield-Safe Signal Implementation                     --
+-- This is a Signal class which has effectively identical behavior to a       --
+-- normal RBXScriptSignal, with the only difference being a couple extra      --
+-- stack frames at the bottom of the stack trace when an error is thrown.     --
+-- This implementation caches runner coroutines, so the ability to yield in   --
+-- the signal handlers comes at minimal extra cost over a naive signal        --
+-- implementation that either always or never spawns a thread.                --
+--                                                                            --
+-- API:                                                                       --
+--   local Signal = require(THIS MODULE)                                      --
+--   local sig = Signal.new()                                                 --
+--   local connection = sig:Connect(function(arg1, arg2, ...) ... end)        --
+--   sig:Fire(arg1, arg2, ...)                                                --
+--   connection:Disconnect()                                                  --
+--   sig:DisconnectAll()                                                      --
+--   local arg1, arg2, ... = sig:Wait()                                       --
+--                                                                            --
+-- Licence:                                                                   --
+--   Licenced under the MIT licence.                                          --
+--                                                                            --
+-- Authors:                                                                   --
+--   stravant - July 31st, 2021 - Created the file.                           --
+--------------------------------------------------------------------------------
 
-local Event = {}
-Event.__index = Event
+-- The currently idle thread to run the next handler on
+local freeRunnerThread = nil
 
-Event.Mock = {
-	Listeners = {},
-	Waiting = {},
-	Fire = function() end,
-	Connect = function()
-		return Connection.Mock
-	end,
-	Wait = function() end
-}
-
-function Event.new()
-	local self = {
-		Listeners = {},
-		Waiting = {}
-	}
-	
-	return setmetatable(self, Event)
+-- Function which acquires the currently idle handler runner thread, runs the
+-- function fn on it, and then releases the thread, returning it to being the
+-- currently idle one.
+-- If there was a currently idle runner thread already, that's okay, that old
+-- one will just get thrown and eventually GCed.
+local function acquireRunnerThreadAndCallEventHandler(fn, ...)
+	local acquiredRunnerThread = freeRunnerThread
+	freeRunnerThread = nil
+	fn(...)
+	-- The handler finished running, this runner thread is free again.
+	freeRunnerThread = acquiredRunnerThread
 end
 
-function Event:Fire(...)
-	for _, fn in pairs(self.Listeners) do
-		coroutine.wrap(fn)(...)
+-- Coroutine runner that we create coroutines of. The coroutine can be 
+-- repeatedly resumed with functions to run followed by the argument to run
+-- them with.
+local function runEventHandlerInFreeThread(...)
+	acquireRunnerThreadAndCallEventHandler(...)
+	while true do
+		acquireRunnerThreadAndCallEventHandler(coroutine.yield())
 	end
-	
-	local oldWaiting = self.Waiting
-	self.Waiting = {}
-	for _, thread in ipairs(oldWaiting) do
-		coroutine.resume(thread, ...)
-	end
 end
 
-function Event:Connect(fn)
-	local typeof_fn = typeof(fn)
-	if typeof_fn == "nil" then
-		return
-	elseif typeof_fn ~= "function" then
-		error(string.format("invalid argument #1 to 'Connect' (function expected, got %s)", typeof_fn))
-	end
-	local connection = Connection.new(self.Listeners)
-	self.Listeners[connection] = fn
-	return connection
-end
-
-function Event:Wait()
-	local thread = coroutine.running()
-	table.insert(self.Waiting, thread)
-	
-	return coroutine.yield()
-end
-
-return Event]]></ProtectedString>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-				</Properties>
-				<Item class="ModuleScript" referent="5">
-					<Properties>
-						<BinaryString name="AttributesSerialize"></BinaryString>
-						<Content name="LinkedSource"><null></null></Content>
-						<string name="Name">Connection</string>
-						<string name="ScriptGuid">{CA99AF25-59EA-4675-9337-A1D417708692}</string>
-						<ProtectedString name="Source"><![CDATA[local Connection = {}
+-- Connection class
+local Connection = {}
 Connection.__index = Connection
 
-Connection.Mock = {
-	Connected = false,
-	Listeners = {},
-	Disconnect = function() end
-}
-
-function Connection.new(listeners)
-	local self = {
-		Connected = true,
-		Listeners = listeners
-	}
-	
-	return setmetatable(self, Connection)
+function Connection.new(signal, fn)
+	return setmetatable({
+		_connected = true,
+		_signal = signal,
+		_fn = fn,
+		_next = false,
+	}, Connection)
 end
 
 function Connection:Disconnect()
-	self.Connected = false
-	self.Listeners[self] = nil
+	assert(self._connected, "Can't disconnect a connection twice.", 2)
+	self._connected = false
+
+	-- Unhook the node, but DON'T clear it. That way any fire calls that are
+	-- currently sitting on this node will be able to iterate forwards off of
+	-- it, but any subsequent fire calls will not hit it, and it will be GCed
+	-- when no more fire calls are sitting on it.
+	if self._signal._handlerListHead == self then
+		self._signal._handlerListHead = self._next
+	else
+		local prev = self._signal._handlerListHead
+		while prev and prev._next ~= self do
+			prev = prev._next
+		end
+		if prev then
+			prev._next = self._next
+		end
+	end
 end
 
-return Connection]]></ProtectedString>
-						<int64 name="SourceAssetId">-1</int64>
-						<BinaryString name="Tags"></BinaryString>
-					</Properties>
-				</Item>
+-- Make Connection strict
+setmetatable(Connection, {
+	__index = function(tb, key)
+		error(("Attempt to get Connection::%s (not a valid member)"):format(tostring(key)), 2)
+	end,
+	__newindex = function(tb, key, value)
+		error(("Attempt to set Connection::%s (not a valid member)"):format(tostring(key)), 2)
+	end
+})
+
+-- Signal class
+local Signal = {}
+Signal.__index = Signal
+
+function Signal.new()
+	return setmetatable({
+		_handlerListHead = false,	
+	}, Signal)
+end
+
+function Signal:Connect(fn)
+	local connection = Connection.new(self, fn)
+	if self._handlerListHead then
+		connection._next = self._handlerListHead
+		self._handlerListHead = connection
+	else
+		self._handlerListHead = connection
+	end
+	return connection
+end
+
+-- Disconnect all handlers. Since we use a linked list it suffices to clear the
+-- reference to the head handler.
+function Signal:DisconnectAll()
+	self._handlerListHead = false
+end
+
+-- Signal:Fire(...) implemented by running the handler functions on the
+-- coRunnerThread, and any time the resulting thread yielded without returning
+-- to us, that means that it yielded to the Roblox scheduler and has been taken
+-- over by Roblox scheduling, meaning we have to make a new coroutine runner.
+function Signal:Fire(...)
+	local item = self._handlerListHead
+	while item do
+		if item._connected then
+			if not freeRunnerThread then
+				freeRunnerThread = coroutine.create(runEventHandlerInFreeThread)
+			end
+			task.spawn(freeRunnerThread, item._fn, ...)
+		end
+		item = item._next
+	end
+end
+
+-- Implement Signal:Wait() in terms of a temporary connection using
+-- a Signal:Connect() which disconnects itself.
+function Signal:Wait()
+	local waitingCoroutine = coroutine.running()
+	local cn;
+	cn = self:Connect(function(...)
+		cn:Disconnect()
+		task.spawn(waitingCoroutine, ...)
+	end)
+	return coroutine.yield()
+end
+
+-- Make signal strict
+setmetatable(Signal, {
+	__index = function(tb, key)
+		error(("Attempt to get Signal::%s (not a valid member)"):format(tostring(key)), 2)
+	end,
+	__newindex = function(tb, key, value)
+		error(("Attempt to set Signal::%s (not a valid member)"):format(tostring(key)), 2)
+	end
+})
+
+return Signal]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
 			</Item>
 			<Item class="ModuleScript" referent="6">
 				<Properties>
@@ -11067,32 +11140,25 @@ return Space]]></ProtectedString>
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="ModuleScript" referent="88">
+		<Item class="ModuleScript" referent="RBX04E5D65BFB584DE49A15C5E6DEE1F51C">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<Content name="LinkedSource"><null></null></Content>
 				<string name="Name">Minesweeper</string>
-				<string name="ScriptGuid">{47060BC8-1FD3-41D1-9E1F-607C8EFE9D40}</string>
+				<string name="ScriptGuid">{1A650A42-50E0-4F22-B1F1-775F30835C33}</string>
 				<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
 
+local Data = require(script.Data)
 local CellController = require(script.CellController)
 local Hotbar = require(script.Hotbar)
-local Data = require(script.Data)
 
 local App = Roact.Component:extend("App")
 
-App.defaultProps = {
-	size = Vector2.new(10, 10),
-	mineCount = 10
-}
-
 function App:init(props)
-	self:setState({
-		data = Data.new(props)
-	})
+	self.data = Data.new(props)
 end
 
 function App:render()
@@ -11111,10 +11177,10 @@ function App:render()
 		}),
 		
 		Cells = Roact.createElement(CellController, {
-			data = self.state.data,
+			data = self.data,
 		}),
 		Hotbar = Roact.createElement(Hotbar, {
-			data = self.state.data,
+			data = self.data,
 		})
 	})
 end
@@ -11123,19 +11189,19 @@ return App]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="89">
+			<Item class="ModuleScript" referent="RBX7B84E9CF730C497F820FF4FD60F1711F">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">CellController</string>
-					<string name="ScriptGuid">{C885862C-994A-437A-AB36-CDD43CCC5254}</string>
+					<string name="ScriptGuid">{D1155F56-9F97-40A6-B2DF-6CC0C75B2020}</string>
 					<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
 
-local app = script.Parent
-	local GameLoop = require(app.GameLoop)
+local root = script.Parent
+	local GameLoop = require(root.GameLoop)
 
 local Cell = require(script.Cell)
 
@@ -11183,17 +11249,24 @@ function CellController:render()
 
 	if self.state.game == "starting" then
 		self.cellChangedConn = data.cellChanged:Connect(function(cell)
-			if cell.state == "open" then
+			if cell.state:getValue() == "open" then
 				self.cellChangedConn:Disconnect()
 				GameLoop.start(data, cell)
-				self:setState({
-					game = "playing"
-				})
+				if data.cellsLeft == 0 then
+					GameLoop.finish(data, nil)
+					self:setState({
+						game = "finished"
+					})
+				else
+					self:setState({
+						game = "playing"
+					})
+				end
 			end
 		end)
 	elseif self.state.game == "playing" then
 		self.cellChangedConn = data.cellChanged:Connect(function(cell)
-			if cell.state == "open" then
+			if cell.state:getValue() == "open" then
 				if cell.hasMine or data.cellsLeft == 0 then
 					self.cellChangedConn:Disconnect()
 					self.resetedConn:Disconnect()
@@ -11260,12 +11333,12 @@ return CellController]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="90">
+				<Item class="ModuleScript" referent="RBXBD63E725453E4B458B0302EE26E1088D">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
 						<string name="Name">Cell</string>
-						<string name="ScriptGuid">{EC97F8FA-4F9F-4AAA-AB8D-9BD918A0991B}</string>
+						<string name="ScriptGuid">{8111C238-D376-429C-9E04-C13312409773}</string>
 						<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
@@ -11275,30 +11348,18 @@ local StartingCell = require(script.StartingCell)
 local PlayingCell = require(script.PlayingCell)
 local FinishedCell = require(script.FinishedCell)
 
-local Cell = Roact.Component:extend("Cell")
-
-function Cell:init(props)
-	local setState
-	self.cellState, setState = Roact.createBinding(props.data.state)
-
-	props.data.setStateCallback = setState
-end
-
 local gameStateToCell = {
 	starting = StartingCell,
 	playing = PlayingCell,
 	finished = FinishedCell
 }
 
-function Cell:render()
-	local props = self.props
-
+local function Cell(props)
 	local size = props.size
 	local position = props.data.position
 	
 	local newProps = {
-		layoutOrder = size.X * position.Y + position.X,
-		state = self.cellState
+		layoutOrder = size.X * position.Y + position.X
 	}
 	for k, v in pairs(props) do
 		newProps[k] = v
@@ -11312,12 +11373,12 @@ return Cell]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
-					<Item class="ModuleScript" referent="91">
+					<Item class="ModuleScript" referent="RBX8D77AD4AE41B4DB9B695A7F3C507115F">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<Content name="LinkedSource"><null></null></Content>
 							<string name="Name">FinishedCell</string>
-							<string name="ScriptGuid">{2F2FBBA5-F103-4610-A4FC-CB7EBF1B4631}</string>
+							<string name="ScriptGuid">{D7F38887-6C07-40FD-999C-31C6E3EF419E}</string>
 							<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
@@ -11325,7 +11386,7 @@ local load = require(ReplicatedStorage.DepLoader)
 
 local function FinishedCell(props)
 	return Roact.createElement("TextButton", {
-		Text = props.state:map(function(state)
+		Text = props.data.state:map(function(state)
 			if state == "open" then
 				if props.data.hasMine then
 					return "💣"
@@ -11351,7 +11412,7 @@ local function FinishedCell(props)
 
 		LayoutOrder = props.layoutOrder,
 
-		BackgroundColor3 = props.state:map(function(state)
+		BackgroundColor3 = props.data.state:map(function(state)
 			if state == "open" then
 				return Color3.fromRGB(235, 225, 171)
 			elseif state == "mineHit" then
@@ -11371,12 +11432,12 @@ return FinishedCell]]></ProtectedString>
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
 					</Item>
-					<Item class="ModuleScript" referent="92">
+					<Item class="ModuleScript" referent="RBX8F0EFEE99AC84B51A0D67D0B3A534859">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<Content name="LinkedSource"><null></null></Content>
 							<string name="Name">PlayingCell</string>
-							<string name="ScriptGuid">{68B95AB0-1882-492D-9CAF-9AA714BC7EF4}</string>
+							<string name="ScriptGuid">{160AC653-4779-4760-BD11-E7502854FD50}</string>
 							<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
@@ -11384,16 +11445,19 @@ local load = require(ReplicatedStorage.DepLoader)
 
 local function PlayingCell(props)
 	local function onOpen(_rbxButton)
-		local state = props.state:getValue()
+		local state = props.data.state:getValue()
 		if state == "closed" then
 			props.data:setState("open")
+			if props.data.surroundingMines == 0 then
+				props.data:openSafeCells()
+			end
 		elseif state == "open" then
 			props.data:attemptOpenUnflaggedNeighbors()
 		end
 	end
 
 	local function onFlag(_rbxButton)
-		local state = props.state:getValue()
+		local state = props.data.state:getValue()
 		
 		if state == "closed" then
 			props.data:setState("flagged")
@@ -11403,7 +11467,7 @@ local function PlayingCell(props)
 	end
 
 	return Roact.createElement("TextButton", {
-		Text = props.state:map(function(state)
+		Text = props.data.state:map(function(state)
 			if state == "open" then
 				if props.data.hasMine then
 					return "💣"
@@ -11421,7 +11485,7 @@ local function PlayingCell(props)
 
 		LayoutOrder = props.layoutOrder,
 
-		BackgroundColor3 = props.state:map(function(state)
+		BackgroundColor3 = props.data.state:map(function(state)
 			if state == "open" then
 				return Color3.fromRGB(230, 230, 230)
 			else
@@ -11445,12 +11509,12 @@ return PlayingCell]]></ProtectedString>
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
 					</Item>
-					<Item class="ModuleScript" referent="93">
+					<Item class="ModuleScript" referent="RBX6F135E9D079E4E5AB5B67BA52E86A7DA">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<Content name="LinkedSource"><null></null></Content>
 							<string name="Name">StartingCell</string>
-							<string name="ScriptGuid">{0C2A6469-3040-473C-B260-EB8838754E52}</string>
+							<string name="ScriptGuid">{C0438834-2541-47F2-976F-EBB4E5DC9D1B}</string>
 							<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
@@ -11462,7 +11526,7 @@ local function StartingCell(props)
 	end
 
 	local function onFlag(_rbxButton)
-		local state = props.state:getValue()
+		local state = props.data.state:getValue()
 
 		if state == "closed" then
 			props.data:setState("flagged")
@@ -11472,7 +11536,7 @@ local function StartingCell(props)
 	end
 
 	return Roact.createElement("TextButton", {
-		Text = props.state:map(function(state)
+		Text = props.data.state:map(function(state)
 			if state == "flagged" then
 				return "🚩"
 			end
@@ -11504,12 +11568,12 @@ return StartingCell]]></ProtectedString>
 					</Item>
 				</Item>
 			</Item>
-			<Item class="ModuleScript" referent="94">
+			<Item class="ModuleScript" referent="RBX9F6AE49556C04D39815A7F0C307DE542">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Data</string>
-					<string name="ScriptGuid">{FF302386-89F3-44E6-95A1-0EEA9AD2B48B}</string>
+					<string name="ScriptGuid">{648E669E-4B2A-49D6-8E5B-B82F03AC0925}</string>
 					<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
@@ -11526,8 +11590,6 @@ function Data.new(props)
 	local self = {
 		size = props.size,
 		mineCount = props.mineCount,
-
-		sideEffects = false,
 	}
 
 	self.cellsLeft = self.size.X * self.size.Y - self.mineCount
@@ -11544,6 +11606,9 @@ function Data.new(props)
 		for y = 1, self.size.Y do
 			local cell = DataCell.new(self, x, y)
 			cells:Set(x, y, cell)
+			cell.changed:Connect(function(newState)
+				self:onStateChanged(cell, newState)
+			end)
 		end
 	end
 
@@ -11568,13 +11633,19 @@ return Data]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="95">
+				<Item class="ModuleScript" referent="RBX5B4B8026768B4859A7CD8895387C1BEB">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
 						<string name="Name">DataCell</string>
-						<string name="ScriptGuid">{560238E5-344E-48FC-851C-6692A25FD1FA}</string>
-						<ProtectedString name="Source"><![CDATA[local offsets = {
+						<string name="ScriptGuid">{6668EC02-D3F1-49B2-A795-8105793A7190}</string>
+						<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local load = require(ReplicatedStorage.DepLoader)
+	local Event = load("Event")
+	local Roact = load("Roact")
+
+local offsets = {
 	Vector2.new(1, 1),
 	Vector2.new(1, 0),
 	Vector2.new(1, -1),
@@ -11589,7 +11660,7 @@ local function getSurroundingFlags(self)
 	local flaggedCount = 0
 
 	for _, neighbor in ipairs(self:getNeighbors()) do
-		if neighbor.state == "flagged" then
+		if neighbor.state:getValue() == "flagged" then
 			flaggedCount += 1
 		end
 	end
@@ -11605,10 +11676,12 @@ function DataCell.new(data, x, y)
 		data = data,
 		cells = data.cells,
 		hasMine = false,
-		state = "closed",
 		surroundingMines = 0,
-		position = Vector2.new(x, y)
+		position = Vector2.new(x, y),
+		changed = Event.new()
 	}
+
+	self.state, self.setRawState = Roact.createBinding("closed")
 
 	setmetatable(self, DataCell)
 
@@ -11616,16 +11689,11 @@ function DataCell.new(data, x, y)
 end
 
 function DataCell:setState(newState)
-	self.state = newState
-	if newState == "open" and self.surroundingMines == 0 then
-		self:openSafeCells()
-	end
-	self.setStateCallback(newState)
-	self.data:onStateChanged(self, newState)
+	self.setRawState(newState)
+	self.changed:Fire(newState)
 end
 
 function DataCell:openSafeCells()
-	if not self.data.sideEffects then return end
 
 	local closedCells = {}
 	local openCells = {}
@@ -11636,7 +11704,7 @@ function DataCell:openSafeCells()
 		openCells[currentCell] = nil
 
 		for _, neighbor in ipairs(currentCell:getNeighbors()) do
-			if closedCells[neighbor] or neighbor.state == "open" then continue end
+			if closedCells[neighbor] or neighbor.state:getValue() == "open" then continue end
 
 			neighbor:setState("open")
 
@@ -11650,15 +11718,17 @@ function DataCell:openSafeCells()
 end
 
 function DataCell:attemptOpenUnflaggedNeighbors()
-	if not self.data.sideEffects then return end
 
 	local surroundingFlags = getSurroundingFlags(self)
 
 	if self.surroundingMines ~= surroundingFlags then return end
 
 	for _, neighbor in ipairs(self:getNeighbors()) do
-		if neighbor.state == "closed" then
+		if neighbor.state:getValue() == "closed" then
 			neighbor:setState("open")
+			if neighbor.surroundingMines == 0 then
+				neighbor:openSafeCells()
+			end
 		end
 	end
 end
@@ -11683,12 +11753,12 @@ return DataCell]]></ProtectedString>
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="ModuleScript" referent="96">
+			<Item class="ModuleScript" referent="RBX43E2322564A14B6283F4E3938EEA78CE">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">GameLoop</string>
-					<string name="ScriptGuid">{443F161C-B3D1-49F1-A74D-1722D011CE4A}</string>
+					<string name="ScriptGuid">{E9B28ACD-AD11-4CA1-9F54-FD85948E3213}</string>
 					<ProtectedString name="Source"><![CDATA[local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -11713,12 +11783,11 @@ function GameLoop.start(data, startingCell)
 
 	local size = data.size
 	local openCellSet = Space.new()
-	local mineSet = Space.new()
 
 	openCellSet:Set(startingCell.position.X, startingCell.position.Y, true)
 	for _, neighbor in ipairs(startingCell:getNeighbors()) do
-		local location = neighbor.position
-		openCellSet:Set(location.X, location.Y, true)
+		local newPosition = neighbor.position
+		openCellSet:Set(newPosition.X, newPosition.Y, true)
 	end
 
 	for _i = 1, data.mineCount do
@@ -11726,18 +11795,15 @@ function GameLoop.start(data, startingCell)
 		repeat
 			x = R:NextInteger(1, size.X)
 			y = R:NextInteger(1, size.Y)
-		until not openCellSet:Get(x, y) and not mineSet:Get(x, y)
+		until not openCellSet:Get(x, y)
 		local cell = data.cells:Get(x, y)
 		cell.hasMine = true
-		mineSet:Set(x, y, cell)
-	end
 
-	for _, column in pairs(mineSet.Data) do
-		for _, cell in pairs(column) do
-			for _, neighbor in ipairs(cell:getNeighbors()) do
-				neighbor.surroundingMines += 1
-			end
+		for _, neighbor in ipairs(cell:getNeighbors()) do
+			neighbor.surroundingMines += 1
 		end
+
+		openCellSet:Set(x, y, true)
 	end
 
 	data.sideEffects = true
@@ -11787,19 +11853,19 @@ return GameLoop]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="97">
+			<Item class="ModuleScript" referent="RBXFEDCEBC63A934F95A9336837FF4982E4">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Hotbar</string>
-					<string name="ScriptGuid">{2BA0345E-E3E0-4B67-88DC-0109EC2B8437}</string>
+					<string name="ScriptGuid">{73D85E8C-1E5A-4A94-BC13-19D652ED2C85}</string>
 					<ProtectedString name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
 
-local app = script.Parent
-	local GameLoop = require(app.GameLoop)
+local root = script.Parent
+	local GameLoop = require(root.GameLoop)
 
 local Hotbar = Roact.Component:extend("Hotbar")
 

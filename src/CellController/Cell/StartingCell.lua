@@ -9,7 +9,7 @@ local function StartingCell(props)
 	end
 
 	local function onFlag(_rbxButton)
-		local state = props.state:getValue()
+		local state = props.data.state:getValue()
 
 		if state == "closed" then
 			props.data:setState("flagged")
@@ -19,7 +19,7 @@ local function StartingCell(props)
 	end
 
 	return Roact.createElement("TextButton", {
-		Text = props.state:map(function(state)
+		Text = props.data.state:map(function(state)
 			if state == "flagged" then
 				return "🚩"
 			end

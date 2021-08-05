@@ -5,7 +5,14 @@
 
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
-      "$path": "test/shared",
+
+      "DepLoader": {
+        "$path": "test/shared/DepLoader",
+
+        "Roact": {
+          "$path": "modules/roact/src"
+        }
+      },
 
       "Minesweeper": {
         "$path": "src"

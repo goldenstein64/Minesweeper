@@ -1,3 +1,6 @@
 [submodule "modules/roact"]
 	path = modules/roact
 	url = https://github.com/Roblox/roact
+[submodule "modules/GoodSignal"]
+	path = modules/GoodSignal
+	url = https://gist.github.com/stravant/b75a322e0919d60dde8a0316d1f09d2f

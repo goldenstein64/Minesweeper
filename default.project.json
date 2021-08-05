@@ -11,6 +11,10 @@
 
         "Roact": {
           "$path": "modules/roact/src"
+        },
+
+        "Event": {
+          "$path": "modules/GoodSignal/GoodSignal.lua"
         }
       },
 

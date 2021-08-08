@@ -1,5 +1,4 @@
 {
-  "commentAnchors.workspace.matchFiles": "src/**",
   "[lua]": {
     "editor.insertSpaces": false
   }

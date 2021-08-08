@@ -24,13 +24,16 @@
     },
 
     "ServerScriptService": {
+      "$className": "ServerScriptService",
       "Server": {
         "$path": "test/server"
       }
     },
 
     "StarterPlayer": {
+      "$className": "StarterPlayer",
       "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
         "Client": {
           "$path": "test/client"
         }
@@ -38,6 +41,7 @@
     },
 
     "Workspace": {
+      "$className": "Workspace",
       "$properties": {
         "FilteringEnabled": true
       },
@@ -66,12 +70,14 @@
     },
 
     "Players": {
+      "$className": "Players",
       "$properties": {
         "CharacterAutoLoads": false
       }
     },
 
     "Lighting": {
+      "$className": "Lighting",
       "$properties": {
         "Ambient": [
           0,
@@ -85,12 +91,14 @@
       }
     },
     "SoundService": {
+      "$className": "SoundService",
       "$properties": {
         "RespectFilteringEnabled": true
       }
     },
 
     "HttpService": {
+      "$className": "HttpService",
       "$properties": {
         "HttpEnabled": true
       }

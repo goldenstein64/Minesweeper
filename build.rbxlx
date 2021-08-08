@@ -35,7 +35,8 @@
         <string name="Source">local ModuleInstances = {
 	Roact = script.Roact,
 	Event = script.Event,
-	Space = script.Space
+	Space = script.Space,
+	ImageAssets = script.ImageAssets
 }
 
 local function DepLoader(name)
@@ -45,6 +46,55 @@ end
 return DepLoader</string>
       </Properties>
       <Item class="ModuleScript" referent="5">
+        <Properties>
+          <string name="Name">ImageAssets</string>
+          <string name="Source">local ImageAssets = {
+	Numbers = {
+		[0] = "rbxassetid://7223763930",
+		[1] = "rbxassetid://7223764750",
+		[2] = "rbxassetid://7223765387",
+		[3] = "rbxassetid://7223766020",
+		[4] = "rbxassetid://7223766574",
+		[5] = "rbxassetid://7223767247",
+		[6] = "rbxassetid://7223768042",
+		[7] = "rbxassetid://7223768735",
+		[8] = "rbxassetid://7223769501",
+		[9] = "rbxassetid://7223770204",
+	},
+
+	Faces = {
+		Default = "rbxassetid://7223771941",
+		Pressed = "rbxassetid://7223772759",
+		Tension = "rbxassetid://7223773495",
+		Won = "rbxassetid://7223774298",
+		Lost = "rbxassetid://7223775005"
+	},
+
+	Cells = {
+		[0] = "rbxassetid://7223776054", -- open cell
+		[1] = "rbxassetid://7223776629",
+		[2] = "rbxassetid://7223777434",
+		[3] = "rbxassetid://7223778118",
+		[4] = "rbxassetid://7223778601",
+		[5] = "rbxassetid://7223779341",
+		[6] = "rbxassetid://7223779900",
+		[7] = "rbxassetid://7223780680",
+		[8] = "rbxassetid://7223780915",
+
+		Closed = "rbxassetid://7223781511",
+		Flagged = "rbxassetid://7223781898",
+		Unknown = "rbxassetid://7223784956",
+		OpenUnknown = "rbxassetid://7223783810",
+		RevealedMine = "rbxassetid://7223784360",
+		HitMine = "rbxassetid://7223782692",
+		Misflagged = "rbxassetid://7223783166",
+	}
+}
+
+return ImageAssets</string>
+        </Properties>
+      </Item>
+      <Item class="ModuleScript" referent="6">
         <Properties>
           <string name="Name">Space</string>
           <string name="Source">local Space = {}
@@ -81,7 +131,7 @@ end
 return Space</string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="6">
+      <Item class="ModuleScript" referent="7">
         <Properties>
           <string name="Name">Event</string>
           <string name="Source">--------------------------------------------------------------------------------
@@ -248,7 +298,7 @@ setmetatable(Signal, {
 return Signal</string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="7">
+      <Item class="ModuleScript" referent="8">
         <Properties>
           <string name="Name">Roact</string>
           <string name="Source">--[[
@@ -301,7 +351,7 @@ local Roact = strict {
 
 return Roact</string>
         </Properties>
-        <Item class="ModuleScript" referent="8">
+        <Item class="ModuleScript" referent="9">
           <Properties>
             <string name="Name">Binding</string>
             <string name="Source">local createSignal = require(script.Parent.createSignal)
@@ -463,7 +513,7 @@ end
 return BindingInternalApi</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="9">
+        <Item class="ModuleScript" referent="10">
           <Properties>
             <string name="Name">Binding.spec</string>
             <string name="Source">return function()
@@ -737,7 +787,7 @@ return BindingInternalApi</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="10">
+        <Item class="ModuleScript" referent="11">
           <Properties>
             <string name="Name">Component</string>
             <string name="Source">local assign = require(script.Parent.assign)
@@ -1263,11 +1313,11 @@ end
 return Component</string>
           </Properties>
         </Item>
-        <Item class="Folder" referent="11">
+        <Item class="Folder" referent="12">
           <Properties>
             <string name="Name">Component.spec</string>
           </Properties>
-          <Item class="ModuleScript" referent="12">
+          <Item class="ModuleScript" referent="13">
             <Properties>
               <string name="Name">context.spec</string>
               <string name="Source">return function()
@@ -1569,7 +1619,7 @@ return Component</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="13">
+          <Item class="ModuleScript" referent="14">
             <Properties>
               <string name="Name">defaultProps.spec</string>
               <string name="Source">return function()
@@ -1700,7 +1750,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="14">
+          <Item class="ModuleScript" referent="15">
             <Properties>
               <string name="Name">didMount.spec</string>
               <string name="Source">return function()
@@ -1740,7 +1790,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="15">
+          <Item class="ModuleScript" referent="16">
             <Properties>
               <string name="Name">didUpdate.spec</string>
               <string name="Source">return function()
@@ -1837,7 +1887,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="16">
+          <Item class="ModuleScript" referent="17">
             <Properties>
               <string name="Name">extend.spec</string>
               <string name="Source">return function()
@@ -1871,7 +1921,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="17">
+          <Item class="ModuleScript" referent="18">
             <Properties>
               <string name="Name">getDerivedStateFromProps.spec</string>
               <string name="Source">return function()
@@ -2155,7 +2205,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="18">
+          <Item class="ModuleScript" referent="19">
             <Properties>
               <string name="Name">getElementTraceback.spec</string>
               <string name="Source">return function()
@@ -2227,7 +2277,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="19">
+          <Item class="ModuleScript" referent="20">
             <Properties>
               <string name="Name">init.spec</string>
               <string name="Source">return function()
@@ -2273,7 +2323,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="20">
+          <Item class="ModuleScript" referent="21">
             <Properties>
               <string name="Name">legacyContext.spec</string>
               <string name="Source">return function()
@@ -2487,7 +2537,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="21">
+          <Item class="ModuleScript" referent="22">
             <Properties>
               <string name="Name">render.spec</string>
               <string name="Source">return function()
@@ -2642,7 +2692,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="22">
+          <Item class="ModuleScript" referent="23">
             <Properties>
               <string name="Name">setState.spec</string>
               <string name="Source"><![CDATA[return function()
@@ -3250,7 +3300,7 @@ end
 ]]></string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="23">
+          <Item class="ModuleScript" referent="24">
             <Properties>
               <string name="Name">shouldUpdate.spec</string>
               <string name="Source">return function()
@@ -3430,7 +3480,7 @@ end
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="24">
+          <Item class="ModuleScript" referent="25">
             <Properties>
               <string name="Name">validateProps.spec</string>
               <string name="Source">return function()
@@ -3704,7 +3754,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="25">
+          <Item class="ModuleScript" referent="26">
             <Properties>
               <string name="Name">willUnmount.spec</string>
               <string name="Source">return function()
@@ -3745,7 +3795,7 @@ end</string>
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="26">
+          <Item class="ModuleScript" referent="27">
             <Properties>
               <string name="Name">willUpdate.spec</string>
               <string name="Source">return function()
@@ -3844,7 +3894,7 @@ end</string>
             </Properties>
           </Item>
         </Item>
-        <Item class="ModuleScript" referent="27">
+        <Item class="ModuleScript" referent="28">
           <Properties>
             <string name="Name">ComponentLifecyclePhase</string>
             <string name="Source">local Symbol = require(script.Parent.Symbol)
@@ -3868,7 +3918,7 @@ local ComponentLifecyclePhase = strict({
 return ComponentLifecyclePhase</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="28">
+        <Item class="ModuleScript" referent="29">
           <Properties>
             <string name="Name">Config</string>
             <string name="Source">--[[
@@ -4000,7 +4050,7 @@ end
 return Config</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="29">
+        <Item class="ModuleScript" referent="30">
           <Properties>
             <string name="Name">Config.spec</string>
             <string name="Source">return function()
@@ -4057,7 +4107,7 @@ return Config</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="30">
+        <Item class="ModuleScript" referent="31">
           <Properties>
             <string name="Name">ElementKind</string>
             <string name="Source">--[[
@@ -4113,7 +4163,7 @@ strict(ElementKindInternal, "ElementKind")
 return ElementKind</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="31">
+        <Item class="ModuleScript" referent="32">
           <Properties>
             <string name="Name">ElementKind.spec</string>
             <string name="Source">return function()
@@ -4172,7 +4222,7 @@ return ElementKind</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="32">
+        <Item class="ModuleScript" referent="33">
           <Properties>
             <string name="Name">ElementUtils</string>
             <string name="Source">local Type = require(script.Parent.Type)
@@ -4276,7 +4326,7 @@ end
 return ElementUtils</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="33">
+        <Item class="ModuleScript" referent="34">
           <Properties>
             <string name="Name">ElementUtils.spec</string>
             <string name="Source">return function()
@@ -4376,7 +4426,7 @@ return ElementUtils</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="34">
+        <Item class="ModuleScript" referent="35">
           <Properties>
             <string name="Name">GlobalConfig</string>
             <string name="Source">--[[
@@ -4388,7 +4438,7 @@ local Config = require(script.Parent.Config)
 return Config.new()</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="35">
+        <Item class="ModuleScript" referent="36">
           <Properties>
             <string name="Name">GlobalConfig.spec</string>
             <string name="Source">return function()
@@ -4402,7 +4452,7 @@ return Config.new()</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="36">
+        <Item class="ModuleScript" referent="37">
           <Properties>
             <string name="Name">Logging</string>
             <string name="Source">--[[
@@ -4566,7 +4616,7 @@ end
 return Logging</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="37">
+        <Item class="ModuleScript" referent="38">
           <Properties>
             <string name="Name">None</string>
             <string name="Source">local Symbol = require(script.Parent.Symbol)
@@ -4578,7 +4628,7 @@ local None = Symbol.named("None")
 return None</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="38">
+        <Item class="ModuleScript" referent="39">
           <Properties>
             <string name="Name">NoopRenderer</string>
             <string name="Source">--[[
@@ -4607,7 +4657,7 @@ end
 return NoopRenderer</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="39">
+        <Item class="ModuleScript" referent="40">
           <Properties>
             <string name="Name">Portal</string>
             <string name="Source">local Symbol = require(script.Parent.Symbol)
@@ -4617,11 +4667,11 @@ local Portal = Symbol.named("Portal")
 return Portal</string>
           </Properties>
         </Item>
-        <Item class="Folder" referent="40">
+        <Item class="Folder" referent="41">
           <Properties>
             <string name="Name">PropMarkers</string>
           </Properties>
-          <Item class="ModuleScript" referent="41">
+          <Item class="ModuleScript" referent="42">
             <Properties>
               <string name="Name">Change</string>
               <string name="Source"><![CDATA[--[[
@@ -4665,7 +4715,7 @@ return Change
 ]]></string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="42">
+          <Item class="ModuleScript" referent="43">
             <Properties>
               <string name="Name">Change.spec</string>
               <string name="Source">return function()
@@ -4689,7 +4739,7 @@ return Change
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="43">
+          <Item class="ModuleScript" referent="44">
             <Properties>
               <string name="Name">Children</string>
               <string name="Source">local Symbol = require(script.Parent.Parent.Symbol)
@@ -4699,7 +4749,7 @@ local Children = Symbol.named("Children")
 return Children</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="44">
+          <Item class="ModuleScript" referent="45">
             <Properties>
               <string name="Name">Event</string>
               <string name="Source"><![CDATA[--[[
@@ -4746,7 +4796,7 @@ return Event
 ]]></string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="45">
+          <Item class="ModuleScript" referent="46">
             <Properties>
               <string name="Name">Event.spec</string>
               <string name="Source">return function()
@@ -4770,7 +4820,7 @@ return Event
 end</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="46">
+          <Item class="ModuleScript" referent="47">
             <Properties>
               <string name="Name">Ref</string>
               <string name="Source">local Symbol = require(script.Parent.Parent.Symbol)
@@ -4781,7 +4831,7 @@ return Ref</string>
             </Properties>
           </Item>
         </Item>
-        <Item class="ModuleScript" referent="47">
+        <Item class="ModuleScript" referent="48">
           <Properties>
             <string name="Name">PureComponent</string>
             <string name="Source">--[[
@@ -4827,7 +4877,7 @@ end
 return PureComponent</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="48">
+        <Item class="ModuleScript" referent="49">
           <Properties>
             <string name="Name">PureComponent.spec</string>
             <string name="Source">return function()
@@ -4907,7 +4957,7 @@ return PureComponent</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="49">
+        <Item class="ModuleScript" referent="50">
           <Properties>
             <string name="Name">RobloxRenderer</string>
             <string name="Source"><![CDATA[--[[
@@ -5196,7 +5246,7 @@ return RobloxRenderer
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="50">
+        <Item class="ModuleScript" referent="51">
           <Properties>
             <string name="Name">RobloxRenderer.spec</string>
             <string name="Source">return function()
@@ -6230,7 +6280,7 @@ return RobloxRenderer
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="51">
+        <Item class="ModuleScript" referent="52">
           <Properties>
             <string name="Name">SingleEventManager</string>
             <string name="Source">--[[
@@ -6382,7 +6432,7 @@ end
 return SingleEventManager</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="52">
+        <Item class="ModuleScript" referent="53">
           <Properties>
             <string name="Name">SingleEventManager.spec</string>
             <string name="Source">return function()
@@ -6626,7 +6676,7 @@ return SingleEventManager</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="53">
+        <Item class="ModuleScript" referent="54">
           <Properties>
             <string name="Name">Symbol</string>
             <string name="Source">--[[
@@ -6661,7 +6711,7 @@ end
 return Symbol</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="54">
+        <Item class="ModuleScript" referent="55">
           <Properties>
             <string name="Name">Symbol.spec</string>
             <string name="Source">return function()
@@ -6690,7 +6740,7 @@ return Symbol</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="55">
+        <Item class="ModuleScript" referent="56">
           <Properties>
             <string name="Name">Type</string>
             <string name="Source">--[[
@@ -6743,7 +6793,7 @@ strict(TypeInternal, "Type")
 return Type</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="56">
+        <Item class="ModuleScript" referent="57">
           <Properties>
             <string name="Name">Type.spec</string>
             <string name="Source">return function()
@@ -6772,7 +6822,7 @@ return Type</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="57">
+        <Item class="ModuleScript" referent="58">
           <Properties>
             <string name="Name">assertDeepEqual</string>
             <string name="Source">--[[
@@ -6850,7 +6900,7 @@ end
 return assertDeepEqual</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="58">
+        <Item class="ModuleScript" referent="59">
           <Properties>
             <string name="Name">assertDeepEqual.spec</string>
             <string name="Source">return function()
@@ -6954,7 +7004,7 @@ return assertDeepEqual</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="59">
+        <Item class="ModuleScript" referent="60">
           <Properties>
             <string name="Name">assign</string>
             <string name="Source">local None = require(script.Parent.None)
@@ -6986,7 +7036,7 @@ end
 return assign</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="60">
+        <Item class="ModuleScript" referent="61">
           <Properties>
             <string name="Name">assign.spec</string>
             <string name="Source">return function()
@@ -7059,7 +7109,7 @@ return assign</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="61">
+        <Item class="ModuleScript" referent="62">
           <Properties>
             <string name="Name">createContext</string>
             <string name="Source"><![CDATA[local Symbol = require(script.Parent.Symbol)
@@ -7216,7 +7266,7 @@ return createContext
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="62">
+        <Item class="ModuleScript" referent="63">
           <Properties>
             <string name="Name">createContext.spec</string>
             <string name="Source">return function()
@@ -7525,7 +7575,7 @@ return createContext
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="63">
+        <Item class="ModuleScript" referent="64">
           <Properties>
             <string name="Name">createElement</string>
             <string name="Source">local Children = require(script.Parent.PropMarkers.Children)
@@ -7604,7 +7654,7 @@ end
 return createElement</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="64">
+        <Item class="ModuleScript" referent="65">
           <Properties>
             <string name="Name">createElement.spec</string>
             <string name="Source">return function()
@@ -7719,7 +7769,7 @@ return createElement</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="65">
+        <Item class="ModuleScript" referent="66">
           <Properties>
             <string name="Name">createFragment</string>
             <string name="Source">local ElementKind = require(script.Parent.ElementKind)
@@ -7736,7 +7786,7 @@ end
 return createFragment</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="66">
+        <Item class="ModuleScript" referent="67">
           <Properties>
             <string name="Name">createFragment.spec</string>
             <string name="Source">return function()
@@ -7762,7 +7812,7 @@ return createFragment</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="67">
+        <Item class="ModuleScript" referent="68">
           <Properties>
             <string name="Name">createReconciler</string>
             <string name="Source"><![CDATA[local Type = require(script.Parent.Type)
@@ -8253,7 +8303,7 @@ return createReconciler
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="68">
+        <Item class="ModuleScript" referent="69">
           <Properties>
             <string name="Name">createReconciler.spec</string>
             <string name="Source">return function()
@@ -8584,7 +8634,7 @@ return createReconciler
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="69">
+        <Item class="ModuleScript" referent="70">
           <Properties>
             <string name="Name">createReconcilerCompat</string>
             <string name="Source">--[[
@@ -8636,7 +8686,7 @@ end
 return createReconcilerCompat</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="70">
+        <Item class="ModuleScript" referent="71">
           <Properties>
             <string name="Name">createReconcilerCompat.spec</string>
             <string name="Source">return function()
@@ -8723,7 +8773,7 @@ return createReconcilerCompat</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="71">
+        <Item class="ModuleScript" referent="72">
           <Properties>
             <string name="Name">createRef</string>
             <string name="Source">--[[
@@ -8766,7 +8816,7 @@ end
 return createRef</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="72">
+        <Item class="ModuleScript" referent="73">
           <Properties>
             <string name="Name">createRef.spec</string>
             <string name="Source">return function()
@@ -8826,7 +8876,7 @@ return createRef</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="73">
+        <Item class="ModuleScript" referent="74">
           <Properties>
             <string name="Name">createSignal</string>
             <string name="Source"><![CDATA[--[[
@@ -8900,7 +8950,7 @@ return createSignal
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="74">
+        <Item class="ModuleScript" referent="75">
           <Properties>
             <string name="Name">createSignal.spec</string>
             <string name="Source">return function()
@@ -9059,7 +9109,7 @@ return createSignal
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="75">
+        <Item class="ModuleScript" referent="76">
           <Properties>
             <string name="Name">createSpy</string>
             <string name="Source">--[[
@@ -9149,7 +9199,7 @@ end
 return createSpy</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="76">
+        <Item class="ModuleScript" referent="77">
           <Properties>
             <string name="Name">createSpy.spec</string>
             <string name="Source">return function()
@@ -9244,7 +9294,7 @@ return createSpy</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="77">
+        <Item class="ModuleScript" referent="78">
           <Properties>
             <string name="Name">forwardRef</string>
             <string name="Source">local assign = require(script.Parent.assign)
@@ -9277,7 +9327,7 @@ end
 return forwardRef</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="78">
+        <Item class="ModuleScript" referent="79">
           <Properties>
             <string name="Name">forwardRef.spec</string>
             <string name="Source"><![CDATA[-- Tests loosely adapted from those found at:
@@ -9624,7 +9674,7 @@ end
 ]]></string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="79">
+        <Item class="ModuleScript" referent="80">
           <Properties>
             <string name="Name">getDefaultInstanceProperty</string>
             <string name="Source">--[[
@@ -9683,7 +9733,7 @@ end
 return getDefaultInstanceProperty</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="80">
+        <Item class="ModuleScript" referent="81">
           <Properties>
             <string name="Name">getDefaultInstanceProperty.spec</string>
             <string name="Source">return function()
@@ -9721,7 +9771,7 @@ return getDefaultInstanceProperty</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="81">
+        <Item class="ModuleScript" referent="82">
           <Properties>
             <string name="Name">init.spec</string>
             <string name="Source">return function()
@@ -9791,7 +9841,7 @@ end</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="82">
+        <Item class="ModuleScript" referent="83">
           <Properties>
             <string name="Name">internalAssert</string>
             <string name="Source">local function internalAssert(condition, message)
@@ -9803,7 +9853,7 @@ end
 return internalAssert</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="83">
+        <Item class="ModuleScript" referent="84">
           <Properties>
             <string name="Name">invalidSetStateMessages</string>
             <string name="Source">--[[
@@ -9852,7 +9902,7 @@ It was triggered by the component %q.
 return invalidSetStateMessages</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="84">
+        <Item class="ModuleScript" referent="85">
           <Properties>
             <string name="Name">oneChild</string>
             <string name="Source">--[[
@@ -9885,7 +9935,7 @@ end
 return oneChild</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="85">
+        <Item class="ModuleScript" referent="86">
           <Properties>
             <string name="Name">oneChild.spec</string>
             <string name="Source">return function()
@@ -9925,7 +9975,7 @@ return oneChild</string>
 end</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="86">
+        <Item class="ModuleScript" referent="87">
           <Properties>
             <string name="Name">strict</string>
             <string name="Source">local function strict(t, name)
@@ -9957,7 +10007,7 @@ end
 return strict</string>
           </Properties>
         </Item>
-        <Item class="ModuleScript" referent="87">
+        <Item class="ModuleScript" referent="88">
           <Properties>
             <string name="Name">strict.spec</string>
             <string name="Source">return function()
@@ -9989,7 +10039,7 @@ end</string>
         </Item>
       </Item>
     </Item>
-    <Item class="ModuleScript" referent="88">
+    <Item class="ModuleScript" referent="89">
       <Properties>
         <string name="Name">Minesweeper</string>
         <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -10033,13 +10083,14 @@ end
 
 return App</string>
       </Properties>
-      <Item class="ModuleScript" referent="89">
+      <Item class="ModuleScript" referent="90">
         <Properties>
           <string name="Name">CellController</string>
           <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
+	local ImageAssets = load("ImageAssets")
 
 local app = script.Parent
 	local GameLoop = require(app.GameLoop)
@@ -10078,13 +10129,13 @@ function CellController:render()
 
 	local function onInputBegan(_rbxFrame, input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			data.setFace("😮")
+			data.setFace(ImageAssets.Faces.Tension)
 		end
 	end
 
 	local function onInputEnded(_rbxFrame, input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			data.setFace("🙂")
+			data.setFace(ImageAssets.Faces.Default)
 		end
 	end
 
@@ -10172,7 +10223,7 @@ end
 
 return CellController</string>
         </Properties>
-        <Item class="ModuleScript" referent="90">
+        <Item class="ModuleScript" referent="91">
           <Properties>
             <string name="Name">Cell</string>
             <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -10207,67 +10258,56 @@ end
 
 return Cell</string>
           </Properties>
-          <Item class="ModuleScript" referent="91">
+          <Item class="ModuleScript" referent="92">
             <Properties>
               <string name="Name">FinishedCell</string>
               <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
+	local ImageAssets = load("ImageAssets")
 
 local function FinishedCell(props)
-	return Roact.createElement("TextButton", {
-		Text = props.data.state:map(function(state)
+	return Roact.createElement("ImageButton", {
+		Image = props.data.state:map(function(state)
 			if state == "open" then
 				if props.data.hasMine then
-					return "💣"
-				elseif props.data.surroundingMines > 0 then
-					return tostring(props.data.surroundingMines)
+					return ImageAssets.Cells.RevealedMine
+				else
+					return ImageAssets.Cells[props.data.surroundingMines]
 				end
 			elseif state == "flagged" then
 				if props.data.hasMine then
-					return "🚩"
+					return ImageAssets.Cells.Flagged
 				else
-					return "❌"
+					return ImageAssets.Cells.Misflagged
 				end
 			elseif state == "closed" and props.data.hasMine then
-				return "💣"
+				return ImageAssets.Cells.RevealedMine
 			elseif state == "mineHit" then
-				return "💣"
+				return ImageAssets.Cells.HitMine
+			else
+				return ""
 			end
-
-			return ""
 		end),
-		TextScaled = true,
-		TextColor3 = Color3.fromRGB(0, 0, 0),
 
 		LayoutOrder = props.layoutOrder,
 
-		BackgroundColor3 = props.data.state:map(function(state)
-			if state == "open" then
-				return Color3.fromRGB(235, 225, 171)
-			elseif state == "mineHit" then
-				return Color3.fromRGB(201, 46, 46)
-			end
-
-			return Color3.fromRGB(150, 150, 150)
-		end),
-		BorderSizePixel = 1,
-		BorderMode = Enum.BorderMode.Middle,
-		BorderColor3 = Color3.fromRGB(0, 0, 0)
+		BackgroundTransparency = 1,
 	})
 end
 
 return FinishedCell</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="92">
+          <Item class="ModuleScript" referent="93">
             <Properties>
               <string name="Name">PlayingCell</string>
               <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
+	local ImageAssets = load("ImageAssets")
 
 local function PlayingCell(props)
 	local function onOpen(_rbxButton)
@@ -10292,35 +10332,26 @@ local function PlayingCell(props)
 		end
 	end
 
-	return Roact.createElement("TextButton", {
-		Text = props.data.state:map(function(state)
+	return Roact.createElement("ImageButton", {
+		Image = props.data.state:map(function(state)
 			if state == "open" then
 				if props.data.hasMine then
-					return "💣"
-				elseif props.data.surroundingMines > 0 then
-					return tostring(props.data.surroundingMines)
+					return ImageAssets.Cells.RevealedMine
+				else
+					return ImageAssets.Cells[props.data.surroundingMines]
 				end
 			elseif state == "flagged" then
-				return "🚩"
+				return ImageAssets.Cells.Flagged
+			elseif state == "closed" then
+				return ImageAssets.Cells.Closed
+			else
+				return ""
 			end
-
-			return ""
 		end),
-		TextScaled = true,
-		TextColor3 = Color3.fromRGB(0, 0, 0),
 
 		LayoutOrder = props.layoutOrder,
 
-		BackgroundColor3 = props.data.state:map(function(state)
-			if state == "open" then
-				return Color3.fromRGB(230, 230, 230)
-			else
-				return Color3.fromRGB(150, 150, 150)
-			end
-		end),
-		BorderSizePixel = 1,
-		BorderMode = Enum.BorderMode.Middle,
-		BorderColor3 = Color3.fromRGB(0, 0, 0),
+		BackgroundTransparency = 1,
 
 		[Roact.Event.MouseButton1Click] = onOpen,
 		[Roact.Event.MouseButton2Click] = onFlag,
@@ -10333,13 +10364,14 @@ end
 return PlayingCell</string>
             </Properties>
           </Item>
-          <Item class="ModuleScript" referent="93">
+          <Item class="ModuleScript" referent="94">
             <Properties>
               <string name="Name">StartingCell</string>
               <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
+	local ImageAssets = load("ImageAssets")
 
 local function StartingCell(props)
 	local function onOpen(_rbxButton)
@@ -10356,23 +10388,18 @@ local function StartingCell(props)
 		end
 	end
 
-	return Roact.createElement("TextButton", {
-		Text = props.data.state:map(function(state)
+	return Roact.createElement("ImageButton", {
+		Image = props.data.state:map(function(state)
 			if state == "flagged" then
-				return "🚩"
+				return ImageAssets.Cells.Flagged
 			end
 
-			return ""
+			return ImageAssets.Cells.Closed
 		end),
-		TextScaled = true,
-		TextColor3 = Color3.fromRGB(0, 0, 0),
 
 		LayoutOrder = props.layoutOrder,
 
-		BackgroundColor3 = Color3.fromRGB(150, 150, 150),
-		BorderSizePixel = 1,
-		BorderMode = Enum.BorderMode.Middle,
-		BorderColor3 = Color3.fromRGB(0, 0, 0),
+		BackgroundTransparency = 1,
 
 		[Roact.Event.MouseButton1Click] = onOpen,
 		[Roact.Event.MouseButton2Click] = onFlag,
@@ -10387,7 +10414,7 @@ return StartingCell</string>
           </Item>
         </Item>
       </Item>
-      <Item class="ModuleScript" referent="94">
+      <Item class="ModuleScript" referent="95">
         <Properties>
           <string name="Name">Data</string>
           <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -10396,6 +10423,7 @@ local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
 	local Event = load("Event")
 	local Space = load("Space")
+	local ImageAssets = load("ImageAssets")
 
 local DataCell = require(script.DataCell)
 
@@ -10411,7 +10439,7 @@ function Data.new(props)
 	self.cellsLeft = self.size.X * self.size.Y - self.mineCount
 	self.minesLeft, self.setMinesLeft = Roact.createBinding(self.mineCount)
 	self.time, self.setTime = Roact.createBinding(0)
-	self.face, self.setFace = Roact.createBinding("🙂")
+	self.face, self.setFace = Roact.createBinding(ImageAssets.Faces.Default)
 
 	self.cellChanged = Event.new()
 	self.reseted = Event.new()
@@ -10447,7 +10475,7 @@ end
 
 return Data</string>
         </Properties>
-        <Item class="ModuleScript" referent="95">
+        <Item class="ModuleScript" referent="96">
           <Properties>
             <string name="Name">DataCell</string>
             <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -10562,7 +10590,7 @@ return DataCell</string>
           </Properties>
         </Item>
       </Item>
-      <Item class="ModuleScript" referent="96">
+      <Item class="ModuleScript" referent="97">
         <Properties>
           <string name="Name">GameLoop</string>
           <string name="Source">local RunService = game:GetService("RunService")
@@ -10570,6 +10598,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Space = load("Space")
+	local ImageAssets = load("ImageAssets")
 
 local R = Random.new()
 
@@ -10625,9 +10654,9 @@ function GameLoop.finish(data, finalCell)
 
 	if finalCell then
 		finalCell:setState("mineHit")
-		data.setFace("💀")
+		data.setFace(ImageAssets.Faces.Lost)
 	else
-		data.setFace("😎")
+		data.setFace(ImageAssets.Faces.Won)
 		data.setMinesLeft(0)
 	end
 end
@@ -10650,14 +10679,14 @@ function GameLoop.reset(data)
 	data.setTime(0)
 	data.setMinesLeft(data.mineCount)
 	data.cellsLeft = data.size.X * data.size.Y - data.mineCount
-	data.setFace("🙂")
+	data.setFace(ImageAssets.Faces.Default)
 	data.reseted:Fire()
 end
 
 return GameLoop</string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="97">
+      <Item class="ModuleScript" referent="98">
         <Properties>
           <string name="Name">Hotbar</string>
           <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -10667,6 +10696,10 @@ local load = require(ReplicatedStorage.DepLoader)
 
 local app = script.Parent
 	local GameLoop = require(app.GameLoop)
+
+local NumberLabel = require(script.NumberLabel)
+
+local PLACES = 3
 
 local Hotbar = Roact.Component:extend("Hotbar")
 
@@ -10694,23 +10727,27 @@ function Hotbar:render()
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
 
-		MinesLeft = Roact.createElement("TextLabel", {
+		MinesLeft = Roact.createElement("Frame", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 1,
-
-			Text = data.minesLeft:map(function(minesLeft)
-				return string.format("%03d", minesLeft)
-			end),
-			Font = Enum.Font.Michroma,
-			TextScaled = true,
+			BackgroundTransparency = 1
+		}, {
+			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
+				AspectRatio = PLACES * 13 / 23
+			}),
+			Label = Roact.createElement(NumberLabel, {
+				value = data.minesLeft,
+				places = PLACES
+			})
 		}),
 		
-		Face = Roact.createElement("TextButton", {
+		Face = Roact.createElement("ImageButton", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 2,
 
-			Text = data.face,
-			TextScaled = true,
+			Image = data.face,
+
+			BackgroundTransparency = 1,
 
 			[Roact.Event.MouseButton1Click] = function(_rbxButton)
 				GameLoop.reset(data)
@@ -10722,62 +10759,118 @@ function Hotbar:render()
 			})
 		}),
 
-		Time = Roact.createElement("TextLabel", {
+		Time = Roact.createElement("Frame", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 3,
-
-			Text = data.time:map(function(time)
-				return string.format("%03d", time)
-			end),
-			Font = Enum.Font.Michroma,
-			TextScaled = true
+			BackgroundTransparency = 1
+		}, {
+			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
+				AspectRatio = PLACES * 13 / 23
+			}),
+			Label = Roact.createElement(NumberLabel, {
+				value = data.time,
+				places = PLACES
+			})
 		})
 	})
 end
 
 return Hotbar</string>
         </Properties>
+        <Item class="ModuleScript" referent="99">
+          <Properties>
+            <string name="Name">NumberLabel</string>
+            <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local load = require(ReplicatedStorage.DepLoader)
+	local Roact = load("Roact")
+	local ImageAssets = load("ImageAssets")
+
+local function NumberLabel(props)
+	local labels = {}
+
+	labels.UIGridLayout = Roact.createElement("UIGridLayout", {
+		CellSize = UDim2.new(1/props.places, 0, 1, 0),
+		CellPadding = UDim2.new(0, 0, 0, 0),
+		FillDirection = Enum.FillDirection.Horizontal,
+		SortOrder = Enum.SortOrder.LayoutOrder,
+		HorizontalAlignment = Enum.HorizontalAlignment.Center,
+		VerticalAlignment = Enum.VerticalAlignment.Center
+	})
+
+	for i = 1, props.places do
+		local name = string.format("Digit1%s", string.rep("0", i - 1))
+		labels[name] = Roact.createElement("ImageButton", {
+			BackgroundTransparency = 1,
+			LayoutOrder = -i,
+			Image = props.value:map(function(number)
+				local digit = math.floor(number / 10^(i - 1)) % 10
+				return ImageAssets.Numbers[digit]
+			end)
+		})
+	end
+
+	return Roact.createFragment(labels)
+end
+
+return NumberLabel</string>
+          </Properties>
+        </Item>
       </Item>
     </Item>
   </Item>
-  <Item class="ServerScriptService" referent="98">
+  <Item class="ServerScriptService" referent="100">
     <Properties>
       <string name="Name">ServerScriptService</string>
     </Properties>
-    <Item class="Script" referent="99">
+    <Item class="Script" referent="101">
       <Properties>
         <string name="Name">Server</string>
         <string name="Source">-- nothing</string>
       </Properties>
     </Item>
   </Item>
-  <Item class="SoundService" referent="100">
+  <Item class="SoundService" referent="102">
     <Properties>
       <string name="Name">SoundService</string>
       <bool name="RespectFilteringEnabled">true</bool>
     </Properties>
   </Item>
-  <Item class="StarterPlayer" referent="101">
+  <Item class="StarterPlayer" referent="103">
     <Properties>
       <string name="Name">StarterPlayer</string>
     </Properties>
-    <Item class="StarterPlayerScripts" referent="102">
+    <Item class="StarterPlayerScripts" referent="104">
       <Properties>
         <string name="Name">StarterPlayerScripts</string>
       </Properties>
-      <Item class="LocalScript" referent="103">
+      <Item class="LocalScript" referent="105">
         <Properties>
           <string name="Name">Client</string>
           <string name="Source">local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ContentProvider = game:GetService("ContentProvider")
+
 
 local player = Players.LocalPlayer
   local playerGui = player.PlayerGui
 
 local load = require(ReplicatedStorage.DepLoader)
   local Roact = load("Roact")
+  local ImageAssets = load("ImageAssets")
 
 local Minesweeper = require(ReplicatedStorage.Minesweeper) -- ./src
+
+local assets = {}
+for _, namespace in pairs(ImageAssets) do
+  for _, assetId in pairs(namespace) do
+    table.insert(assets, assetId)
+  end
+end
+
+print("waiting for image assets to load...")
+ContentProvider:PreloadAsync(assets)
+print("loaded!")
 
 local presets = {
   easy = {
@@ -10815,12 +10908,12 @@ Roact.mount(hostElement, playerGui)</string>
       </Item>
     </Item>
   </Item>
-  <Item class="Workspace" referent="104">
+  <Item class="Workspace" referent="106">
     <Properties>
       <string name="Name">Workspace</string>
       <bool name="FilteringEnabled">true</bool>
     </Properties>
-    <Item class="Part" referent="105">
+    <Item class="Part" referent="107">
       <Properties>
         <string name="Name">Baseplate</string>
         <bool name="Anchored">true</bool>

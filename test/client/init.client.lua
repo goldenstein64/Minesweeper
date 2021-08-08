@@ -1,13 +1,27 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ContentProvider = game:GetService("ContentProvider")
+
 
 local player = Players.LocalPlayer
   local playerGui = player.PlayerGui
 
 local load = require(ReplicatedStorage.DepLoader)
   local Roact = load("Roact")
+  local ImageAssets = load("ImageAssets")
 
 local Minesweeper = require(ReplicatedStorage.Minesweeper) -- ./src
+
+local assets = {}
+for _, namespace in pairs(ImageAssets) do
+  for _, assetId in pairs(namespace) do
+    table.insert(assets, assetId)
+  end
+end
+
+print("waiting for image assets to load...")
+ContentProvider:PreloadAsync(assets)
+print("loaded!")
 
 local presets = {
   easy = {

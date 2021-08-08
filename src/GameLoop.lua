@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Space = load("Space")
+	local ImageAssets = load("ImageAssets")
 
 local R = Random.new()
 
@@ -58,9 +59,9 @@ function GameLoop.finish(data, finalCell)
 
 	if finalCell then
 		finalCell:setState("mineHit")
-		data.setFace("💀")
+		data.setFace(ImageAssets.Faces.Lost)
 	else
-		data.setFace("😎")
+		data.setFace(ImageAssets.Faces.Won)
 		data.setMinesLeft(0)
 	end
 end
@@ -83,7 +84,7 @@ function GameLoop.reset(data)
 	data.setTime(0)
 	data.setMinesLeft(data.mineCount)
 	data.cellsLeft = data.size.X * data.size.Y - data.mineCount
-	data.setFace("🙂")
+	data.setFace(ImageAssets.Faces.Default)
 	data.reseted:Fire()
 end
 

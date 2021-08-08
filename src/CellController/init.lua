@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
+	local ImageAssets = load("ImageAssets")
 
 local app = script.Parent
 	local GameLoop = require(app.GameLoop)
@@ -40,13 +41,13 @@ function CellController:render()
 
 	local function onInputBegan(_rbxFrame, input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			data.setFace("😮")
+			data.setFace(ImageAssets.Faces.Tension)
 		end
 	end
 
 	local function onInputEnded(_rbxFrame, input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			data.setFace("🙂")
+			data.setFace(ImageAssets.Faces.Default)
 		end
 	end
 

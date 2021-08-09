@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Event = load("Event")
-	local Roact = load("Roact")
+local Event = load("Event")
+local Roact = load("Roact")
 
 local offsets = {
 	Vector2.new(1, 1),
@@ -12,7 +12,7 @@ local offsets = {
 	Vector2.new(-1, -1),
 	Vector2.new(-1, 0),
 	Vector2.new(-1, 1),
-	Vector2.new(0, 1)
+	Vector2.new(0, 1),
 }
 
 local function getSurroundingFlags(self)
@@ -37,7 +37,7 @@ function DataCell.new(data, x, y)
 		hasMine = false,
 		surroundingMines = 0,
 		position = Vector2.new(x, y),
-		changed = Event.new()
+		changed = Event.new(),
 	}
 
 	self.state, self.setRawState = Roact.createBinding("closed")
@@ -53,7 +53,6 @@ function DataCell:setState(newState)
 end
 
 function DataCell:openSafeCells()
-
 	local closedCells = {}
 	local openCells = {}
 
@@ -63,7 +62,9 @@ function DataCell:openSafeCells()
 		openCells[currentCell] = nil
 
 		for _, neighbor in ipairs(currentCell:getNeighbors()) do
-			if closedCells[neighbor] or neighbor.state:getValue() == "open" then continue end
+			if closedCells[neighbor] or neighbor.state:getValue() == "open" then
+				continue
+			end
 
 			neighbor:setState("open")
 
@@ -71,16 +72,17 @@ function DataCell:openSafeCells()
 				openCells[neighbor] = true
 			end
 		end
-		
+
 		currentCell = next(openCells)
 	end
 end
 
 function DataCell:attemptOpenUnflaggedNeighbors()
-
 	local surroundingFlags = getSurroundingFlags(self)
 
-	if self.surroundingMines ~= surroundingFlags then return end
+	if self.surroundingMines ~= surroundingFlags then
+		return
+	end
 
 	for _, neighbor in ipairs(self:getNeighbors()) do
 		if neighbor.state:getValue() == "closed" then
@@ -98,7 +100,9 @@ function DataCell:getNeighbors()
 		local newPosition = self.position + offset
 
 		local cell = self.cells:Get(newPosition.X, newPosition.Y)
-		if not cell then continue end
+		if not cell then
+			continue
+		end
 
 		table.insert(neighbors, cell)
 	end

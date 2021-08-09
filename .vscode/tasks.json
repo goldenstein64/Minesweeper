@@ -11,6 +11,15 @@
         "isDefault": true
       },
       "command": "rojo build default.project.json -o build.rbxlx"
+    },
+    {
+      "label": "Serve",
+      "type": "shell",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "command": "rojo serve default.project.json"
     }
   ]
 }

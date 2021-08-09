@@ -1,7 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local function StartingCell(props)
 	local function onOpen(_rbxButton)
@@ -18,29 +19,24 @@ local function StartingCell(props)
 		end
 	end
 
-	return Roact.createElement("TextButton", {
-		Text = props.data.state:map(function(state)
+	return Roact.createElement("ImageButton", {
+		Image = props.data.state:map(function(state)
 			if state == "flagged" then
-				return "🚩"
+				return ImageAssets.Cells.Flagged
 			end
 
-			return ""
+			return ImageAssets.Cells.Closed
 		end),
-		TextScaled = true,
-		TextColor3 = Color3.fromRGB(0, 0, 0),
 
 		LayoutOrder = props.layoutOrder,
 
-		BackgroundColor3 = Color3.fromRGB(150, 150, 150),
-		BorderSizePixel = 1,
-		BorderMode = Enum.BorderMode.Middle,
-		BorderColor3 = Color3.fromRGB(0, 0, 0),
+		BackgroundTransparency = 1,
 
 		[Roact.Event.MouseButton1Click] = onOpen,
 		[Roact.Event.MouseButton2Click] = onFlag,
 
 		[Roact.Event.TouchTap] = onOpen,
-		[Roact.Event.TouchLongPress] = onFlag
+		[Roact.Event.TouchLongPress] = onFlag,
 	})
 end
 

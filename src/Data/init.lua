@@ -1,9 +1,10 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local Event = load("Event")
-	local Space = load("Space")
+local Roact = load("Roact")
+local Event = load("Event")
+local Space = load("Space")
+local ImageAssets = load("ImageAssets")
 
 local DataCell = require(script.DataCell)
 
@@ -19,7 +20,7 @@ function Data.new(props)
 	self.cellsLeft = self.size.X * self.size.Y - self.mineCount
 	self.minesLeft, self.setMinesLeft = Roact.createBinding(self.mineCount)
 	self.time, self.setTime = Roact.createBinding(0)
-	self.face, self.setFace = Roact.createBinding("🙂")
+	self.face, self.setFace = Roact.createBinding(ImageAssets.Faces.Default)
 
 	self.cellChanged = Event.new()
 	self.reseted = Event.new()

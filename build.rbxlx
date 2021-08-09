@@ -32,11 +32,11 @@
     <Item class="ModuleScript" referent="4">
       <Properties>
         <string name="Name">DepLoader</string>
-        <string name="Source">local ModuleInstances = {
+        <string name="Source"><![CDATA[local ModuleInstances = {
 	Roact = script.Roact,
 	Event = script.Event,
 	Space = script.Space,
-	ImageAssets = script.ImageAssets
+	ImageAssets = script.ImageAssets,
 }
 
 local function DepLoader(name)
@@ -48,12 +48,13 @@ local function DepLoader(name)
 	return require(module)
 end
 
-return DepLoader</string>
+return DepLoader
+]]></string>
       </Properties>
       <Item class="ModuleScript" referent="5">
         <Properties>
           <string name="Name">ImageAssets</string>
-          <string name="Source">local ImageAssets = {
+          <string name="Source"><![CDATA[local ImageAssets = {
 	Numbers = {
 		[0] = "rbxassetid://7226670298",
 		[1] = "rbxassetid://7226670582",
@@ -72,13 +73,13 @@ return DepLoader</string>
 		Pressed = "rbxassetid://7226673622",
 		Tension = "rbxassetid://7226673794",
 		Won = "rbxassetid://7226673996",
-		Lost = "rbxassetid://7226673355"
+		Lost = "rbxassetid://7226673355",
 	},
 
 	Cells = {
 		[0] = "rbxassetid://7226674758", -- open cell
 		[1] = "rbxassetid://7226674902",
-		[2] = "rbxassetid://7226675042",
+		[2] = "rbxassetid://7226763686", -- higher resolution smh
 		[3] = "rbxassetid://7226675154",
 		[4] = "rbxassetid://7226675328",
 		[5] = "rbxassetid://7226675598",
@@ -93,21 +94,22 @@ return DepLoader</string>
 		RevealedMine = "rbxassetid://7226677878",
 		HitMine = "rbxassetid://7226677303",
 		Misflagged = "rbxassetid://7226677527",
-	}
+	},
 }
 
-return ImageAssets</string>
+return ImageAssets
+]]></string>
         </Properties>
       </Item>
       <Item class="ModuleScript" referent="6">
         <Properties>
           <string name="Name">Space</string>
-          <string name="Source">local Space = {}
+          <string name="Source"><![CDATA[local Space = {}
 Space.__index = Space
 
 function Space.new()
 	local self = {
-		Data = {}
+		Data = {},
 	}
 
 	setmetatable(self, Space)
@@ -133,7 +135,8 @@ function Space:Set(x, y, v)
 	end
 end
 
-return Space</string>
+return Space
+]]></string>
         </Properties>
       </Item>
       <Item class="ModuleScript" referent="7">
@@ -10047,10 +10050,10 @@ end</string>
     <Item class="ModuleScript" referent="89">
       <Properties>
         <string name="Name">Minesweeper</string>
-        <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
 
 local Data = require(script.Data)
 local CellController = require(script.CellController)
@@ -10076,41 +10079,42 @@ function App:render()
 			VerticalAlignment = Enum.VerticalAlignment.Center,
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
-		
+
 		Cells = Roact.createElement(CellController, {
 			data = self.data,
 		}),
 		Hotbar = Roact.createElement(Hotbar, {
 			data = self.data,
-		})
+		}),
 	})
 end
 
-return App</string>
+return App
+]]></string>
       </Properties>
       <Item class="ModuleScript" referent="90">
         <Properties>
           <string name="Name">CellController</string>
-          <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+          <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local app = script.Parent
-	local GameLoop = require(app.GameLoop)
+local GameLoop = require(app.GameLoop)
 
 local Cell = require(script.Cell)
 
 local CellController = Roact.Component:extend("CellController")
 
 CellController.defaultProps = {
-	layoutOrder = 2
+	layoutOrder = 2,
 }
 
 function CellController:init()
 	self:setState({
-		game = "starting"
+		game = "starting",
 	})
 end
 
@@ -10118,9 +10122,9 @@ function CellController:render()
 	local data = self.props.data
 
 	local size = data.size
-	
+
 	local cellCollection = {}
-	
+
 	for x, column in pairs(data.cells.Data) do
 		for y, cell in pairs(column) do
 			local name = string.format("Cell_%02d_%02d", y, x)
@@ -10152,11 +10156,11 @@ function CellController:render()
 				if data.cellsLeft == 0 then
 					GameLoop.finish(data, nil)
 					self:setState({
-						game = "finished"
+						game = "finished",
 					})
 				else
 					self:setState({
-						game = "playing"
+						game = "playing",
 					})
 				end
 			end
@@ -10169,7 +10173,7 @@ function CellController:render()
 					self.resetedConn:Disconnect()
 					GameLoop.finish(data, cell.hasMine and cell or nil)
 					self:setState({
-						game = "finished"
+						game = "finished",
 					})
 				end
 			end
@@ -10179,14 +10183,14 @@ function CellController:render()
 			self.cellChangedConn:Disconnect()
 			self.resetedConn:Disconnect()
 			self:setState({
-				game = "starting"
+				game = "starting",
 			})
 		end)
 	elseif self.state.game == "finished" then
 		self.resetedConn = data.reseted:Connect(function()
 			self.resetedConn:Disconnect()
 			self:setState({
-				game = "starting"
+				game = "starting",
 			})
 		end)
 
@@ -10208,8 +10212,8 @@ function CellController:render()
 		[Roact.Event.InputEnded] = onInputEnded,
 	}, {
 		UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
-			AspectRatio = size.X/size.Y,
-			AspectType = Enum.AspectType.FitWithinMaxSize
+			AspectRatio = size.X / size.Y,
+			AspectType = Enum.AspectType.FitWithinMaxSize,
 		}),
 
 		UIGridLayout = Roact.createElement("UIGridLayout", {
@@ -10218,23 +10222,24 @@ function CellController:render()
 			FillDirection = Enum.FillDirection.Horizontal,
 			FillDirectionMaxCells = size.X,
 
-			CellSize = UDim2.new(1/size.X, 0, 1/size.Y, 0),
-			CellPadding = UDim2.new(0, 0, 0, 0)
+			CellSize = UDim2.new(1 / size.X, 0, 1 / size.Y, 0),
+			CellPadding = UDim2.new(0, 0, 0, 0),
 		}),
 
 		Cells = Roact.createFragment(cellCollection),
 	})
 end
 
-return CellController</string>
+return CellController
+]]></string>
         </Properties>
         <Item class="ModuleScript" referent="91">
           <Properties>
             <string name="Name">Cell</string>
-            <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+            <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
 
 local StartingCell = require(script.StartingCell)
 local PlayingCell = require(script.PlayingCell)
@@ -10243,15 +10248,15 @@ local FinishedCell = require(script.FinishedCell)
 local gameStateToCell = {
 	starting = StartingCell,
 	playing = PlayingCell,
-	finished = FinishedCell
+	finished = FinishedCell,
 }
 
 local function Cell(props)
 	local size = props.size
 	local position = props.data.position
-	
+
 	local newProps = {
-		layoutOrder = size.X * position.Y + position.X
+		layoutOrder = size.X * position.Y + position.X,
 	}
 	for k, v in pairs(props) do
 		newProps[k] = v
@@ -10261,16 +10266,17 @@ local function Cell(props)
 	return Roact.createElement(derivedCell, newProps)
 end
 
-return Cell</string>
+return Cell
+]]></string>
           </Properties>
           <Item class="ModuleScript" referent="92">
             <Properties>
               <string name="Name">FinishedCell</string>
-              <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local function FinishedCell(props)
 	return Roact.createElement("ImageButton", {
@@ -10302,17 +10308,18 @@ local function FinishedCell(props)
 	})
 end
 
-return FinishedCell</string>
+return FinishedCell
+]]></string>
             </Properties>
           </Item>
           <Item class="ModuleScript" referent="93">
             <Properties>
               <string name="Name">PlayingCell</string>
-              <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local function PlayingCell(props)
 	local function onOpen(_rbxButton)
@@ -10329,7 +10336,7 @@ local function PlayingCell(props)
 
 	local function onFlag(_rbxButton)
 		local state = props.data.state:getValue()
-		
+
 		if state == "closed" then
 			props.data:setState("flagged")
 		elseif state == "flagged" then
@@ -10362,21 +10369,22 @@ local function PlayingCell(props)
 		[Roact.Event.MouseButton2Click] = onFlag,
 
 		[Roact.Event.TouchTap] = onOpen,
-		[Roact.Event.TouchLongPress] = onFlag
+		[Roact.Event.TouchLongPress] = onFlag,
 	})
 end
 
-return PlayingCell</string>
+return PlayingCell
+]]></string>
             </Properties>
           </Item>
           <Item class="ModuleScript" referent="94">
             <Properties>
               <string name="Name">StartingCell</string>
-              <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local function StartingCell(props)
 	local function onOpen(_rbxButton)
@@ -10410,11 +10418,12 @@ local function StartingCell(props)
 		[Roact.Event.MouseButton2Click] = onFlag,
 
 		[Roact.Event.TouchTap] = onOpen,
-		[Roact.Event.TouchLongPress] = onFlag
+		[Roact.Event.TouchLongPress] = onFlag,
 	})
 end
 
-return StartingCell</string>
+return StartingCell
+]]></string>
             </Properties>
           </Item>
         </Item>
@@ -10422,13 +10431,13 @@ return StartingCell</string>
       <Item class="ModuleScript" referent="95">
         <Properties>
           <string name="Name">Data</string>
-          <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+          <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local Event = load("Event")
-	local Space = load("Space")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local Event = load("Event")
+local Space = load("Space")
+local ImageAssets = load("ImageAssets")
 
 local DataCell = require(script.DataCell)
 
@@ -10478,16 +10487,17 @@ function Data:onStateChanged(cell, newState)
 	self.cellChanged:Fire(cell)
 end
 
-return Data</string>
+return Data
+]]></string>
         </Properties>
         <Item class="ModuleScript" referent="96">
           <Properties>
             <string name="Name">DataCell</string>
-            <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+            <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Event = load("Event")
-	local Roact = load("Roact")
+local Event = load("Event")
+local Roact = load("Roact")
 
 local offsets = {
 	Vector2.new(1, 1),
@@ -10497,7 +10507,7 @@ local offsets = {
 	Vector2.new(-1, -1),
 	Vector2.new(-1, 0),
 	Vector2.new(-1, 1),
-	Vector2.new(0, 1)
+	Vector2.new(0, 1),
 }
 
 local function getSurroundingFlags(self)
@@ -10522,7 +10532,7 @@ function DataCell.new(data, x, y)
 		hasMine = false,
 		surroundingMines = 0,
 		position = Vector2.new(x, y),
-		changed = Event.new()
+		changed = Event.new(),
 	}
 
 	self.state, self.setRawState = Roact.createBinding("closed")
@@ -10538,7 +10548,6 @@ function DataCell:setState(newState)
 end
 
 function DataCell:openSafeCells()
-
 	local closedCells = {}
 	local openCells = {}
 
@@ -10548,7 +10557,9 @@ function DataCell:openSafeCells()
 		openCells[currentCell] = nil
 
 		for _, neighbor in ipairs(currentCell:getNeighbors()) do
-			if closedCells[neighbor] or neighbor.state:getValue() == "open" then continue end
+			if closedCells[neighbor] or neighbor.state:getValue() == "open" then
+				continue
+			end
 
 			neighbor:setState("open")
 
@@ -10556,16 +10567,17 @@ function DataCell:openSafeCells()
 				openCells[neighbor] = true
 			end
 		end
-		
+
 		currentCell = next(openCells)
 	end
 end
 
 function DataCell:attemptOpenUnflaggedNeighbors()
-
 	local surroundingFlags = getSurroundingFlags(self)
 
-	if self.surroundingMines ~= surroundingFlags then return end
+	if self.surroundingMines ~= surroundingFlags then
+		return
+	end
 
 	for _, neighbor in ipairs(self:getNeighbors()) do
 		if neighbor.state:getValue() == "closed" then
@@ -10583,7 +10595,9 @@ function DataCell:getNeighbors()
 		local newPosition = self.position + offset
 
 		local cell = self.cells:Get(newPosition.X, newPosition.Y)
-		if not cell then continue end
+		if not cell then
+			continue
+		end
 
 		table.insert(neighbors, cell)
 	end
@@ -10591,19 +10605,20 @@ function DataCell:getNeighbors()
 	return neighbors
 end
 
-return DataCell</string>
+return DataCell
+]]></string>
           </Properties>
         </Item>
       </Item>
       <Item class="ModuleScript" referent="97">
         <Properties>
           <string name="Name">GameLoop</string>
-          <string name="Source">local RunService = game:GetService("RunService")
+          <string name="Source"><![CDATA[local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Space = load("Space")
-	local ImageAssets = load("ImageAssets")
+local Space = load("Space")
+local ImageAssets = load("ImageAssets")
 
 local R = Random.new()
 
@@ -10688,19 +10703,21 @@ function GameLoop.reset(data)
 	data.reseted:Fire()
 end
 
-return GameLoop</string>
+return GameLoop
+]]></string>
         </Properties>
       </Item>
       <Item class="ModuleScript" referent="98">
         <Properties>
           <string name="Name">Hotbar</string>
-          <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+          <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local app = script.Parent
-	local GameLoop = require(app.GameLoop)
+local GameLoop = require(app.GameLoop)
 
 local NumberLabel = require(script.NumberLabel)
 
@@ -10709,7 +10726,7 @@ local PLACES = 3
 local Hotbar = Roact.Component:extend("Hotbar")
 
 Hotbar.defaultProps = {
-	layoutOrder = 1
+	layoutOrder = 1,
 }
 
 function Hotbar:render()
@@ -10722,7 +10739,7 @@ function Hotbar:render()
 
 		BackgroundTransparency = 1,
 
-		LayoutOrder = self.props.layoutOrder
+		LayoutOrder = self.props.layoutOrder,
 	}, {
 		UIListLayout = Roact.createElement("UIListLayout", {
 			Padding = UDim.new(0.05, 0),
@@ -10735,72 +10752,74 @@ function Hotbar:render()
 		MinesLeft = Roact.createElement("Frame", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 1,
-			BackgroundTransparency = 1
+			BackgroundTransparency = 1,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
-				AspectRatio = PLACES * 13 / 23
+				AspectRatio = PLACES * 13 / 23,
 			}),
 			Label = Roact.createElement(NumberLabel, {
 				value = data.minesLeft,
-				places = PLACES
-			})
+				places = PLACES,
+			}),
 		}),
-		
+
 		Face = Roact.createElement("ImageButton", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 2,
 
 			Image = data.face,
+			PressedImage = ImageAssets.Faces.Pressed,
 
 			BackgroundTransparency = 1,
 
 			[Roact.Event.MouseButton1Click] = function(_rbxButton)
 				GameLoop.reset(data)
-			end
+			end,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
 				AspectRatio = 1,
-				AspectType = Enum.AspectType.FitWithinMaxSize
-			})
+				AspectType = Enum.AspectType.FitWithinMaxSize,
+			}),
 		}),
 
 		Time = Roact.createElement("Frame", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 3,
-			BackgroundTransparency = 1
+			BackgroundTransparency = 1,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
-				AspectRatio = PLACES * 13 / 23
+				AspectRatio = PLACES * 13 / 23,
 			}),
 			Label = Roact.createElement(NumberLabel, {
 				value = data.time,
-				places = PLACES
-			})
-		})
+				places = PLACES,
+			}),
+		}),
 	})
 end
 
-return Hotbar</string>
+return Hotbar
+]]></string>
         </Properties>
         <Item class="ModuleScript" referent="99">
           <Properties>
             <string name="Name">NumberLabel</string>
-            <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+            <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local function NumberLabel(props)
 	local labels = {}
 
 	labels.UIGridLayout = Roact.createElement("UIGridLayout", {
-		CellSize = UDim2.new(1/props.places, 0, 1, 0),
+		CellSize = UDim2.new(1 / props.places, 0, 1, 0),
 		CellPadding = UDim2.new(0, 0, 0, 0),
 		FillDirection = Enum.FillDirection.Horizontal,
 		SortOrder = Enum.SortOrder.LayoutOrder,
 		HorizontalAlignment = Enum.HorizontalAlignment.Center,
-		VerticalAlignment = Enum.VerticalAlignment.Center
+		VerticalAlignment = Enum.VerticalAlignment.Center,
 	})
 
 	for i = 1, props.places do
@@ -10809,16 +10828,17 @@ local function NumberLabel(props)
 			BackgroundTransparency = 1,
 			LayoutOrder = -i,
 			Image = props.value:map(function(number)
-				local digit = math.floor(number / 10^(i - 1)) % 10
+				local digit = math.floor(number / 10 ^ (i - 1)) % 10
 				return ImageAssets.Numbers[digit]
-			end)
+			end),
 		})
 	end
 
 	return Roact.createFragment(labels)
 end
 
-return NumberLabel</string>
+return NumberLabel
+]]></string>
           </Properties>
         </Item>
       </Item>
@@ -10831,7 +10851,8 @@ return NumberLabel</string>
     <Item class="Script" referent="101">
       <Properties>
         <string name="Name">Server</string>
-        <string name="Source">-- nothing</string>
+        <string name="Source"><![CDATA[-- nothing
+]]></string>
       </Properties>
     </Item>
   </Item>
@@ -10852,34 +10873,35 @@ return NumberLabel</string>
       <Item class="LocalScript" referent="105">
         <Properties>
           <string name="Name">Client</string>
-          <string name="Source">local Players = game:GetService("Players")
+          <string name="Source"><![CDATA[local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ContentProvider = game:GetService("ContentProvider")
 
 local player = Players.LocalPlayer
-  local playerGui = player.PlayerGui
+local playerGui = player.PlayerGui
 
 local load = require(ReplicatedStorage.DepLoader)
-  local Roact = load("Roact")
-  local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
-local debug = true
+local debug = false
 if debug then
-  local testAssets = require(script.TestAssets)
-  local testElement = Roact.createElement(testAssets)
-  local hostElement = Roact.createElement("ScreenGui", nil, {
-    Contents = testElement
-  })
-  Roact.mount(hostElement, playerGui)
+	local testAssets = require(script.TestAssets)
+	local testElement = Roact.createElement(testAssets)
+	local hostElement = Roact.createElement("ScreenGui", nil, {
+		Contents = testElement,
+	})
+	Roact.mount(hostElement, playerGui)
+	return
 end
 
 local Minesweeper = require(ReplicatedStorage.Minesweeper) -- ./src
 
 local assets = {}
 for _, namespace in pairs(ImageAssets) do
-  for _, assetId in pairs(namespace) do
-    table.insert(assets, assetId)
-  end
+	for _, assetId in pairs(namespace) do
+		table.insert(assets, assetId)
+	end
 end
 
 print("waiting for image assets to load...")
@@ -10887,62 +10909,64 @@ ContentProvider:PreloadAsync(assets)
 print("loaded!")
 
 local presets = {
-  easy = {
-    size = Vector2.new(9, 9),
-    mineCount = 10
-  },
-  medium = {
-    size = Vector2.new(16, 16),
-    mineCount = 40
-  },
-  hard = {
-    size = Vector2.new(30, 16),
-    mineCount = 99
-  },
-  extreme = {
-    size = Vector2.new(30, 24),
-    mineCount = 180
-  }
+	easy = {
+		size = Vector2.new(9, 9),
+		mineCount = 10,
+	},
+	medium = {
+		size = Vector2.new(16, 16),
+		mineCount = 40,
+	},
+	hard = {
+		size = Vector2.new(30, 16),
+		mineCount = 99,
+	},
+	extreme = {
+		size = Vector2.new(30, 24),
+		mineCount = 180,
+	},
 }
 
 local gameElement = Roact.createElement(Minesweeper, presets.easy)
 
 local hostElement = Roact.createElement("ScreenGui", nil, {
-  ParentFrame = Roact.createElement("Frame", {
-    Size = UDim2.new(1, 0, 1, 0),
-    Position = UDim2.new(0.5, 0, 0.5, 0),
-    AnchorPoint = Vector2.new(0.5, 0.5),
-  }, {
-    Minesweeper = gameElement
-  })
+	ParentFrame = Roact.createElement("Frame", {
+		Size = UDim2.new(1, 0, 1, 0),
+		Position = UDim2.new(0.5, 0, 0.5, 0),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundColor3 = Color3.fromRGB(160, 160, 160),
+	}, {
+		Minesweeper = gameElement,
+	}),
 })
 
-Roact.mount(hostElement, playerGui)</string>
+Roact.mount(hostElement, playerGui)
+]]></string>
         </Properties>
         <Item class="ModuleScript" referent="106">
           <Properties>
             <string name="Name">TestAssets</string>
-            <string name="Source">local ReplicatedStorage = game:GetService("ReplicatedStorage")
+            <string name="Source"><![CDATA[local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local ImageAssets = load("ImageAssets")
-	local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
 
 local function Container(props)
 	local children = {}
 
 	children.UIGridLayout = Roact.createElement("UIGridLayout", {
-		CellSize = UDim2.fromOffset(200, 200)
+		CellSize = UDim2.fromOffset(50, 50),
 	})
 
 	for k, assetId in pairs(props.images) do
 		children[k] = Roact.createElement("ImageLabel", {
-			Image = assetId
+			Image = assetId,
 		})
 	end
 
 	return Roact.createElement("Frame", {
-		Size = UDim2.new(1/3, 0, 1, 0)
+		Size = UDim2.new(1 / 3, 0, 1, 0),
 	}, children)
 end
 
@@ -10950,20 +10974,21 @@ local function TestAssets()
 	local children = {}
 
 	children.UIListLayout = Roact.createElement("UIListLayout", {
-		FillDirection = Enum.FillDirection.Horizontal
+		FillDirection = Enum.FillDirection.Horizontal,
 	})
 	for k, namespace in pairs(ImageAssets) do
 		children[k] = Roact.createElement(Container, {
-			images = namespace
+			images = namespace,
 		})
 	end
 
 	return Roact.createElement("Frame", {
-		Size = UDim2.new(1, 0, 1, 0)
+		Size = UDim2.new(1, 0, 1, 0),
 	}, children)
 end
 
-return TestAssets</string>
+return TestAssets
+]]></string>
           </Properties>
         </Item>
       </Item>

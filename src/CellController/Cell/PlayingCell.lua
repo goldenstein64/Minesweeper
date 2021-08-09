@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local function PlayingCell(props)
 	local function onOpen(_rbxButton)
@@ -19,7 +19,7 @@ local function PlayingCell(props)
 
 	local function onFlag(_rbxButton)
 		local state = props.data.state:getValue()
-		
+
 		if state == "closed" then
 			props.data:setState("flagged")
 		elseif state == "flagged" then
@@ -52,7 +52,7 @@ local function PlayingCell(props)
 		[Roact.Event.MouseButton2Click] = onFlag,
 
 		[Roact.Event.TouchTap] = onOpen,
-		[Roact.Event.TouchLongPress] = onFlag
+		[Roact.Event.TouchLongPress] = onFlag,
 	})
 end
 

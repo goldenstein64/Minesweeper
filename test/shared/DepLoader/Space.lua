@@ -3,7 +3,7 @@ Space.__index = Space
 
 function Space.new()
 	local self = {
-		Data = {}
+		Data = {},
 	}
 
 	setmetatable(self, Space)

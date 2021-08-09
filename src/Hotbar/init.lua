@@ -1,11 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local app = script.Parent
-	local GameLoop = require(app.GameLoop)
+local GameLoop = require(app.GameLoop)
 
 local NumberLabel = require(script.NumberLabel)
 
@@ -14,7 +14,7 @@ local PLACES = 3
 local Hotbar = Roact.Component:extend("Hotbar")
 
 Hotbar.defaultProps = {
-	layoutOrder = 1
+	layoutOrder = 1,
 }
 
 function Hotbar:render()
@@ -27,7 +27,7 @@ function Hotbar:render()
 
 		BackgroundTransparency = 1,
 
-		LayoutOrder = self.props.layoutOrder
+		LayoutOrder = self.props.layoutOrder,
 	}, {
 		UIListLayout = Roact.createElement("UIListLayout", {
 			Padding = UDim.new(0.05, 0),
@@ -40,17 +40,17 @@ function Hotbar:render()
 		MinesLeft = Roact.createElement("Frame", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 1,
-			BackgroundTransparency = 1
+			BackgroundTransparency = 1,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
-				AspectRatio = PLACES * 13 / 23
+				AspectRatio = PLACES * 13 / 23,
 			}),
 			Label = Roact.createElement(NumberLabel, {
 				value = data.minesLeft,
-				places = PLACES
-			})
+				places = PLACES,
+			}),
 		}),
-		
+
 		Face = Roact.createElement("ImageButton", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 2,
@@ -62,27 +62,27 @@ function Hotbar:render()
 
 			[Roact.Event.MouseButton1Click] = function(_rbxButton)
 				GameLoop.reset(data)
-			end
+			end,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
 				AspectRatio = 1,
-				AspectType = Enum.AspectType.FitWithinMaxSize
-			})
+				AspectType = Enum.AspectType.FitWithinMaxSize,
+			}),
 		}),
 
 		Time = Roact.createElement("Frame", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 3,
-			BackgroundTransparency = 1
+			BackgroundTransparency = 1,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
-				AspectRatio = PLACES * 13 / 23
+				AspectRatio = PLACES * 13 / 23,
 			}),
 			Label = Roact.createElement(NumberLabel, {
 				value = data.time,
-				places = PLACES
-			})
-		})
+				places = PLACES,
+			}),
+		}),
 	})
 end
 

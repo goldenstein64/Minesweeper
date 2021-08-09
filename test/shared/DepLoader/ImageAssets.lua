@@ -17,7 +17,7 @@ local ImageAssets = {
 		Pressed = "rbxassetid://7226673622",
 		Tension = "rbxassetid://7226673794",
 		Won = "rbxassetid://7226673996",
-		Lost = "rbxassetid://7226673355"
+		Lost = "rbxassetid://7226673355",
 	},
 
 	Cells = {
@@ -38,7 +38,7 @@ local ImageAssets = {
 		RevealedMine = "rbxassetid://7226677878",
 		HitMine = "rbxassetid://7226677303",
 		Misflagged = "rbxassetid://7226677527",
-	}
+	},
 }
 
 return ImageAssets

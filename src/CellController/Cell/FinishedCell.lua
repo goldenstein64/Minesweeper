@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local function FinishedCell(props)
 	return Roact.createElement("ImageButton", {

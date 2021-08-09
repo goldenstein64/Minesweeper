@@ -1,19 +1,19 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local ImageAssets = load("ImageAssets")
+local Roact = load("Roact")
+local ImageAssets = load("ImageAssets")
 
 local function NumberLabel(props)
 	local labels = {}
 
 	labels.UIGridLayout = Roact.createElement("UIGridLayout", {
-		CellSize = UDim2.new(1/props.places, 0, 1, 0),
+		CellSize = UDim2.new(1 / props.places, 0, 1, 0),
 		CellPadding = UDim2.new(0, 0, 0, 0),
 		FillDirection = Enum.FillDirection.Horizontal,
 		SortOrder = Enum.SortOrder.LayoutOrder,
 		HorizontalAlignment = Enum.HorizontalAlignment.Center,
-		VerticalAlignment = Enum.VerticalAlignment.Center
+		VerticalAlignment = Enum.VerticalAlignment.Center,
 	})
 
 	for i = 1, props.places do
@@ -22,9 +22,9 @@ local function NumberLabel(props)
 			BackgroundTransparency = 1,
 			LayoutOrder = -i,
 			Image = props.value:map(function(number)
-				local digit = math.floor(number / 10^(i - 1)) % 10
+				local digit = math.floor(number / 10 ^ (i - 1)) % 10
 				return ImageAssets.Numbers[digit]
-			end)
+			end),
 		})
 	end
 

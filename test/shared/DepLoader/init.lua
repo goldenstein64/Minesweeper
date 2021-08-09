@@ -2,7 +2,7 @@ local ModuleInstances = {
 	Roact = script.Roact,
 	Event = script.Event,
 	Space = script.Space,
-	ImageAssets = script.ImageAssets
+	ImageAssets = script.ImageAssets,
 }
 
 local function DepLoader(name)

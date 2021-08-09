@@ -2,13 +2,23 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ContentProvider = game:GetService("ContentProvider")
 
-
 local player = Players.LocalPlayer
   local playerGui = player.PlayerGui
 
 local load = require(ReplicatedStorage.DepLoader)
   local Roact = load("Roact")
   local ImageAssets = load("ImageAssets")
+
+local debug = false
+if debug then
+  local testAssets = require(script.TestAssets)
+  local testElement = Roact.createElement(testAssets)
+  local hostElement = Roact.createElement("ScreenGui", nil, {
+    Contents = testElement
+  })
+  Roact.mount(hostElement, playerGui)
+  return
+end
 
 local Minesweeper = require(ReplicatedStorage.Minesweeper) -- ./src
 
@@ -49,6 +59,7 @@ local hostElement = Roact.createElement("ScreenGui", nil, {
     Size = UDim2.new(1, 0, 1, 0),
     Position = UDim2.new(0.5, 0, 0.5, 0),
     AnchorPoint = Vector2.new(0.5, 0.5),
+    BackgroundColor3 = Color3.fromRGB(160, 160, 160)
   }, {
     Minesweeper = gameElement
   })

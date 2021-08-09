@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 	local Roact = load("Roact")
+	local ImageAssets = load("ImageAssets")
 
 local app = script.Parent
 	local GameLoop = require(app.GameLoop)
@@ -55,6 +56,7 @@ function Hotbar:render()
 			LayoutOrder = 2,
 
 			Image = data.face,
+			PressedImage = ImageAssets.Faces.Pressed,
 
 			BackgroundTransparency = 1,
 

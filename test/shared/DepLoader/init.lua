@@ -6,7 +6,12 @@ local ModuleInstances = {
 }
 
 local function DepLoader(name)
-	return require(ModuleInstances[name])
+	local module = ModuleInstances[name]
+	if not module then
+		error(string.format("Module %q does not exist!", name))
+	end
+
+	return require(module)
 end
 
 return DepLoader

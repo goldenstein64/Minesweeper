@@ -1,5 +1,8 @@
 {
+  "rojo.buildFileFormat": "XML",
+  "rojo.buildOutputPath": "build",
   "[lua]": {
     "editor.insertSpaces": false
-  }
+  },
+  "rojo.releaseBranch": "6.x"
 }

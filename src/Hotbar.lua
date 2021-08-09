@@ -1,15 +1,15 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
 
 local app = script.Parent
-	local GameLoop = require(app.GameLoop)
+local GameLoop = require(app.GameLoop)
 
 local Hotbar = Roact.Component:extend("Hotbar")
 
 Hotbar.defaultProps = {
-	layoutOrder = 1
+	layoutOrder = 1,
 }
 
 function Hotbar:render()
@@ -22,7 +22,7 @@ function Hotbar:render()
 
 		BackgroundTransparency = 1,
 
-		LayoutOrder = self.props.layoutOrder
+		LayoutOrder = self.props.layoutOrder,
 	}, {
 		UIListLayout = Roact.createElement("UIListLayout", {
 			Padding = UDim.new(0.05, 0),
@@ -42,7 +42,7 @@ function Hotbar:render()
 			Font = Enum.Font.Michroma,
 			TextScaled = true,
 		}),
-		
+
 		Face = Roact.createElement("TextButton", {
 			Size = UDim2.new(0.3, 0, 0.8, 0),
 			LayoutOrder = 2,
@@ -52,12 +52,12 @@ function Hotbar:render()
 
 			[Roact.Event.MouseButton1Click] = function(_rbxButton)
 				GameLoop.reset(data)
-			end
+			end,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
 				AspectRatio = 1,
-				AspectType = Enum.AspectType.FitWithinMaxSize
-			})
+				AspectType = Enum.AspectType.FitWithinMaxSize,
+			}),
 		}),
 
 		Time = Roact.createElement("TextLabel", {
@@ -68,8 +68,8 @@ function Hotbar:render()
 				return string.format("%03d", time)
 			end),
 			Font = Enum.Font.Michroma,
-			TextScaled = true
-		})
+			TextScaled = true,
+		}),
 	})
 end
 

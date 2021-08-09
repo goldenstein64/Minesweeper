@@ -1,22 +1,22 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
 
 local app = script.Parent
-	local GameLoop = require(app.GameLoop)
+local GameLoop = require(app.GameLoop)
 
 local Cell = require(script.Cell)
 
 local CellController = Roact.Component:extend("CellController")
 
 CellController.defaultProps = {
-	layoutOrder = 2
+	layoutOrder = 2,
 }
 
 function CellController:init()
 	self:setState({
-		game = "starting"
+		game = "starting",
 	})
 end
 
@@ -24,9 +24,9 @@ function CellController:render()
 	local data = self.props.data
 
 	local size = data.size
-	
+
 	local cellCollection = {}
-	
+
 	for x, column in pairs(data.cells.Data) do
 		for y, cell in pairs(column) do
 			local name = string.format("Cell_%02d_%02d", y, x)
@@ -58,11 +58,11 @@ function CellController:render()
 				if data.cellsLeft == 0 then
 					GameLoop.finish(data, nil)
 					self:setState({
-						game = "finished"
+						game = "finished",
 					})
 				else
 					self:setState({
-						game = "playing"
+						game = "playing",
 					})
 				end
 			end
@@ -75,7 +75,7 @@ function CellController:render()
 					self.resetedConn:Disconnect()
 					GameLoop.finish(data, cell.hasMine and cell or nil)
 					self:setState({
-						game = "finished"
+						game = "finished",
 					})
 				end
 			end
@@ -85,14 +85,14 @@ function CellController:render()
 			self.cellChangedConn:Disconnect()
 			self.resetedConn:Disconnect()
 			self:setState({
-				game = "starting"
+				game = "starting",
 			})
 		end)
 	elseif self.state.game == "finished" then
 		self.resetedConn = data.reseted:Connect(function()
 			self.resetedConn:Disconnect()
 			self:setState({
-				game = "starting"
+				game = "starting",
 			})
 		end)
 
@@ -114,8 +114,8 @@ function CellController:render()
 		[Roact.Event.InputEnded] = onInputEnded,
 	}, {
 		UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
-			AspectRatio = size.X/size.Y,
-			AspectType = Enum.AspectType.FitWithinMaxSize
+			AspectRatio = size.X / size.Y,
+			AspectType = Enum.AspectType.FitWithinMaxSize,
 		}),
 
 		UIGridLayout = Roact.createElement("UIGridLayout", {
@@ -124,8 +124,8 @@ function CellController:render()
 			FillDirection = Enum.FillDirection.Horizontal,
 			FillDirectionMaxCells = size.X,
 
-			CellSize = UDim2.new(1/size.X, 0, 1/size.Y, 0),
-			CellPadding = UDim2.new(0, 0, 0, 0)
+			CellSize = UDim2.new(1 / size.X, 0, 1 / size.Y, 0),
+			CellPadding = UDim2.new(0, 0, 0, 0),
 		}),
 
 		Cells = Roact.createFragment(cellCollection),

@@ -2,7 +2,7 @@ local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Space = load("Space")
+local Space = load("Space")
 
 local R = Random.new()
 

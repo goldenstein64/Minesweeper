@@ -1,7 +1,7 @@
 local ModuleInstances = {
 	Roact = script.Roact,
 	Event = script.Event,
-	Space = script.Space
+	Space = script.Space,
 }
 
 local function DepLoader(name)

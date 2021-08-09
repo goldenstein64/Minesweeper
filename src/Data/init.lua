@@ -1,9 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
-	local Event = load("Event")
-	local Space = load("Space")
+local Roact = load("Roact")
+local Event = load("Event")
+local Space = load("Space")
 
 local DataCell = require(script.DataCell)
 

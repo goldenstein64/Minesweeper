@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
 
 local function StartingCell(props)
 	local function onOpen(_rbxButton)
@@ -40,7 +40,7 @@ local function StartingCell(props)
 		[Roact.Event.MouseButton2Click] = onFlag,
 
 		[Roact.Event.TouchTap] = onOpen,
-		[Roact.Event.TouchLongPress] = onFlag
+		[Roact.Event.TouchLongPress] = onFlag,
 	})
 end
 

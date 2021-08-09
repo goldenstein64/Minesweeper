@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
 
 local function FinishedCell(props)
 	return Roact.createElement("TextButton", {
@@ -42,7 +42,7 @@ local function FinishedCell(props)
 		end),
 		BorderSizePixel = 1,
 		BorderMode = Enum.BorderMode.Middle,
-		BorderColor3 = Color3.fromRGB(0, 0, 0)
+		BorderColor3 = Color3.fromRGB(0, 0, 0),
 	})
 end
 

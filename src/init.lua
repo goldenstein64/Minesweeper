@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-	local Roact = load("Roact")
+local Roact = load("Roact")
 
 local Data = require(script.Data)
 local CellController = require(script.CellController)
@@ -27,13 +27,13 @@ function App:render()
 			VerticalAlignment = Enum.VerticalAlignment.Center,
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
-		
+
 		Cells = Roact.createElement(CellController, {
 			data = self.data,
 		}),
 		Hotbar = Roact.createElement(Hotbar, {
 			data = self.data,
-		})
+		}),
 	})
 end
 

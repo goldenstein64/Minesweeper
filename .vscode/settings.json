@@ -4,5 +4,9 @@
   "[lua]": {
     "editor.insertSpaces": false
   },
-  "rojo.releaseBranch": "6.x"
+  "rojo.releaseBranch": "7.x",
+  "cSpell.words": [
+    "Roact",
+    "Voxel"
+  ]
 }

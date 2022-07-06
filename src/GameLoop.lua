@@ -58,7 +58,7 @@ function GameLoop.finish(data, finalCell)
 
 	if finalCell then
 		finalCell:setState("mineHit")
-		data.setFace("💀")
+		data.setFace("😵")
 	else
 		data.setFace("😎")
 		data.setMinesLeft(0)

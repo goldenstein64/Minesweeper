@@ -19,10 +19,12 @@ local function FinishedCell(props)
 				else
 					return ImageAssets.Cells.Misflagged
 				end
-			elseif state == "closed" and props.data.hasMine then
-				return ImageAssets.Cells.RevealedMine
-			elseif state == "mineHit" then
-				return ImageAssets.Cells.HitMine
+			elseif state == "closed" then
+				if props.data.hasMine then
+					return ImageAssets.Cells.Flagged
+				else
+					return ImageAssets.Cells.Closed
+				end
 			else
 				return ""
 			end

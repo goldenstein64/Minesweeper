@@ -11,7 +11,7 @@ local function Container(props)
 		CellSize = UDim2.fromOffset(50, 50),
 	})
 
-	for k, assetId in pairs(props.images) do
+	for k, assetId in props.images do
 		children[k] = Roact.createElement("ImageLabel", {
 			Image = assetId,
 		})
@@ -28,7 +28,7 @@ local function TestAssets()
 	children.UIListLayout = Roact.createElement("UIListLayout", {
 		FillDirection = Enum.FillDirection.Horizontal,
 	})
-	for k, namespace in pairs(ImageAssets) do
+	for k, namespace in ImageAssets do
 		children[k] = Roact.createElement(Container, {
 			images = namespace,
 		})

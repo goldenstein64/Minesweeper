@@ -9,8 +9,8 @@ local load = require(ReplicatedStorage.DepLoader)
 local Roact = load("Roact")
 local ImageAssets = load("ImageAssets")
 
-local debug = false
-if debug then
+local debugMode = script:GetAttribute("DebugMode")
+if debugMode then
 	local testAssets = require(script.TestAssets)
 	local testElement = Roact.createElement(testAssets)
 	local hostElement = Roact.createElement("ScreenGui", nil, {
@@ -23,33 +23,33 @@ end
 local Minesweeper = require(ReplicatedStorage.Minesweeper) -- ./src
 
 local assets = {}
-for _, namespace in pairs(ImageAssets) do
-	for _, assetId in pairs(namespace) do
+for _, namespace in ImageAssets do
+	for _, assetId in namespace do
 		table.insert(assets, assetId)
 	end
 end
 
-print("waiting for image assets to load...")
+local loadingScreen = Roact.createElement("ScreenGui", nil, {
+	LoadingLabel = Roact.createElement("TextLabel", {
+		Size = UDim2.new(1, 0, 1, 0),
+		BackgroundTransparency = 0.25,
+
+		TextScaled = true,
+		Text = "Loading...",
+	}),
+})
+
+local loadingTree = Roact.mount(loadingScreen, playerGui)
+
 ContentProvider:PreloadAsync(assets)
-print("loaded!")
+
+Roact.unmount(loadingTree)
 
 local presets = {
-	easy = {
-		size = Vector2.new(9, 9),
-		mineCount = 10,
-	},
-	medium = {
-		size = Vector2.new(16, 16),
-		mineCount = 40,
-	},
-	hard = {
-		size = Vector2.new(30, 16),
-		mineCount = 99,
-	},
-	extreme = {
-		size = Vector2.new(30, 24),
-		mineCount = 180,
-	},
+	easy = { size = Vector2.new(9, 9), mineCount = 10 },
+	medium = { size = Vector2.new(16, 16), mineCount = 40 },
+	hard = { size = Vector2.new(30, 16), mineCount = 99 },
+	extreme = { size = Vector2.new(30, 24), mineCount = 180 },
 }
 
 local gameElement = Roact.createElement(Minesweeper, presets.easy)

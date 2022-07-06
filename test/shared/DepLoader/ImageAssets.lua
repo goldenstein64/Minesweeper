@@ -1,5 +1,5 @@
-local ImageAssets = {
-	Numbers = {
+local ImageAssets = table.freeze({
+	Numbers = table.freeze({
 		[0] = "rbxassetid://7226670298",
 		[1] = "rbxassetid://7226670582",
 		[2] = "rbxassetid://7226670817",
@@ -10,17 +10,17 @@ local ImageAssets = {
 		[7] = "rbxassetid://7226671941",
 		[8] = "rbxassetid://7226672158",
 		[9] = "rbxassetid://7226672330",
-	},
+	}),
 
-	Faces = {
+	Faces = table.freeze({
 		Default = "rbxassetid://7226672869",
 		Pressed = "rbxassetid://7226673622",
 		Tension = "rbxassetid://7226673794",
 		Won = "rbxassetid://7226673996",
 		Lost = "rbxassetid://7226673355",
-	},
+	}),
 
-	Cells = {
+	Cells = table.freeze({
 		[0] = "rbxassetid://7226674758", -- open cell
 		[1] = "rbxassetid://7226674902",
 		[2] = "rbxassetid://7226763686", -- higher resolution smh
@@ -38,7 +38,7 @@ local ImageAssets = {
 		RevealedMine = "rbxassetid://7226677878",
 		HitMine = "rbxassetid://7226677303",
 		Misflagged = "rbxassetid://7226677527",
-	},
-}
+	}),
+})
 
 return ImageAssets

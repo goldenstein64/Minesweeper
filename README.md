@@ -8,7 +8,9 @@ Minesweeper is a puzzle game from the 1960s about clearing mines as fast as poss
 
 * Right-click a closed space to flag it, and again to unflag it.
 
-* Left-click an opened space to reveal unflagged neighbors.
+* Left-click an opened space to open closed neighbors.
+
+* Right-click an opened space to flag closed neighbors.
 
 ## Usage
 
@@ -16,24 +18,26 @@ This project is implemented using Roact, so you can also mount it to the PlayerG
 
 ## Getting Started
 
-This place is built using [Rojo](https://rojo.space/) 6.2.0.
+This place is built using [Rojo](https://rojo.space/) 7.2.0.
 
 To build the place from scratch, use:
 
 ```bash
-rojo build -o "build.rbxlx"
+rojo build -o "build.rbxl"
 ```
 
-Next, open `build.rbxlx` in Roblox Studio and start the Rojo server:
+Next, open `build.rbxl` in Roblox Studio and start the Rojo server:
 
 ```bash
 rojo serve
 ```
 
-If you want to build just the `Minesweeper` module from scratch (dependencies not included), use:
+If you want to build just the `Minesweeper` module from scratch (dependencies included), use:
 
 ```bash
-rojo build package.project.json -o "Minesweeper.rbxmx"
+rojo build package.project.json -o "Minesweeper.rbxm"
 ```
+
+This will produce a folder containing the `Minesweeper` module along with its dependencies under `DepLoader`. `Minesweeper` assumes that `DepLoader` is a direct child of `ReplicatedStorage`.
 
 For more help, check out [the Rojo documentation](https://rojo.space/docs).

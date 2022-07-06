@@ -5,7 +5,7 @@ local ModuleInstances = {
 	ImageAssets = script.ImageAssets,
 }
 
-local function DepLoader(name)
+local function load(name)
 	local module = ModuleInstances[name]
 	if not module then
 		error(string.format("Module %q does not exist!", name))
@@ -14,4 +14,4 @@ local function DepLoader(name)
 	return require(module)
 end
 
-return DepLoader
+return load

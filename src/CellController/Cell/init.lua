@@ -5,12 +5,14 @@ local Roact = load("Roact")
 
 local StartingCell = require(script.StartingCell)
 local PlayingCell = require(script.PlayingCell)
-local FinishedCell = require(script.FinishedCell)
+local VictoryCell = require(script.VictoryCell)
+local DefeatCell = require(script.DefeatCell)
 
 local gameStateToCell = {
 	starting = StartingCell,
 	playing = PlayingCell,
-	finished = FinishedCell,
+	victory = VictoryCell,
+	defeat = DefeatCell
 }
 
 local function Cell(props)
@@ -20,7 +22,7 @@ local function Cell(props)
 	local newProps = {
 		layoutOrder = size.X * position.Y + position.X,
 	}
-	for k, v in pairs(props) do
+	for k, v in props do
 		newProps[k] = v
 	end
 

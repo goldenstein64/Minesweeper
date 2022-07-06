@@ -15,16 +15,16 @@ local offsets = {
 	Vector2.new(0, 1),
 }
 
-local function getSurroundingFlags(self)
-	local flaggedCount = 0
+local function countNeighborsWithState(self, state)
+	local stateCount = 0
 
-	for _, neighbor in ipairs(self:getNeighbors()) do
-		if neighbor.state:getValue() == "flagged" then
-			flaggedCount += 1
+	for _, neighbor in self:getNeighbors() do
+		if neighbor.state:getValue() == state then
+			stateCount += 1
 		end
 	end
 
-	return flaggedCount
+	return stateCount
 end
 
 local DataCell = {}
@@ -41,6 +41,7 @@ function DataCell.new(data, x, y)
 	}
 
 	self.state, self.setRawState = Roact.createBinding("closed")
+	self.pressed, self.setRawPressed = Roact.createBinding(false)
 
 	setmetatable(self, DataCell)
 
@@ -52,6 +53,10 @@ function DataCell:setState(newState)
 	self.changed:Fire(newState)
 end
 
+function DataCell:setPressed(isPressed)
+	self.setRawPressed(isPressed)
+end
+
 function DataCell:openSafeCells()
 	local closedCells = {}
 	local openCells = {}
@@ -61,7 +66,7 @@ function DataCell:openSafeCells()
 		closedCells[currentCell] = true
 		openCells[currentCell] = nil
 
-		for _, neighbor in ipairs(currentCell:getNeighbors()) do
+		for _, neighbor in currentCell:getNeighbors() do
 			if closedCells[neighbor] or neighbor.state:getValue() == "open" then
 				continue
 			end
@@ -77,16 +82,25 @@ function DataCell:openSafeCells()
 	end
 end
 
-function DataCell:attemptOpenUnflaggedNeighbors()
-	local surroundingFlags = getSurroundingFlags(self)
+function DataCell:chord()
+	local surroundingFlags = countNeighborsWithState(self, "flagged")
 
-	if self.surroundingMines ~= surroundingFlags then
+	if self.surroundingMines > surroundingFlags then
 		return
 	end
 
-	for _, neighbor in ipairs(self:getNeighbors()) do
+	local hitMine = false
+	for _, neighbor in self:getNeighbors() do
 		if neighbor.state:getValue() == "closed" then
 			neighbor:setState("open")
+			if neighbor.hasMine then
+				hitMine = true
+			end
+		end
+	end
+
+	if not hitMine then
+		for _, neighbor in self:getNeighbors() do
 			if neighbor.surroundingMines == 0 then
 				neighbor:openSafeCells()
 			end
@@ -94,9 +108,24 @@ function DataCell:attemptOpenUnflaggedNeighbors()
 	end
 end
 
+function DataCell:flagChord()
+	local flaggedNeighborCount = countNeighborsWithState(self, "flagged")
+	local closedNeighborCount = countNeighborsWithState(self, "closed")
+
+	if self.surroundingMines ~= flaggedNeighborCount + closedNeighborCount then
+		return
+	end
+
+	for _, neighbor in self:getNeighbors() do
+		if neighbor.state:getValue() == "closed" then
+			neighbor:setState("flagged")
+		end
+	end
+end
+
 function DataCell:getNeighbors()
 	local neighbors = {}
-	for _, offset in ipairs(offsets) do
+	for _, offset in offsets do
 		local newPosition = self.position + offset
 
 		local cell = self.cells:Get(newPosition.X, newPosition.Y)

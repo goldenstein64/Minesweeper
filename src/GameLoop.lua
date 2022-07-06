@@ -25,7 +25,7 @@ function GameLoop.start(data, startingCell)
 	local openCellSet = Space.new()
 
 	openCellSet:Set(startingCell.position.X, startingCell.position.Y, true)
-	for _, neighbor in ipairs(startingCell:getNeighbors()) do
+	for _, neighbor in startingCell:getNeighbors() do
 		local newPosition = neighbor.position
 		openCellSet:Set(newPosition.X, newPosition.Y, true)
 	end
@@ -39,7 +39,7 @@ function GameLoop.start(data, startingCell)
 		local cell = data.cells:Get(x, y)
 		cell.hasMine = true
 
-		for _, neighbor in ipairs(cell:getNeighbors()) do
+		for _, neighbor in cell:getNeighbors() do
 			neighbor.surroundingMines += 1
 		end
 
@@ -67,12 +67,10 @@ function GameLoop.finish(data, finalCell)
 end
 
 function GameLoop.reset(data)
-	for _, column in pairs(data.cells.Data) do
-		for _, cell in pairs(column) do
-			cell.hasMine = false
-			cell.surroundingMines = 0
-			cell:setState("closed")
-		end
+	for _, _, cell in data.cells do
+		cell.hasMine = false
+		cell.surroundingMines = 0
+		cell:setState("closed")
 	end
 
 	if data.timerConn then

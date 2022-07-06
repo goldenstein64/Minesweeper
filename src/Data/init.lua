@@ -11,6 +11,18 @@ local DataCell = require(script.DataCell)
 local Data = {}
 Data.__index = Data
 
+local function onStateChanged(self, cell, newState)
+	if newState == "open" then
+		self.cellsLeft -= 1
+	elseif newState == "flagged" then
+		self.setMinesLeft(self.minesLeft:getValue() - 1)
+	elseif newState == "closed" then
+		self.setMinesLeft(self.minesLeft:getValue() + 1)
+	end
+
+	self.cellChanged:Fire(cell, newState)
+end
+
 function Data.new(props)
 	local self = {
 		size = props.size,
@@ -32,7 +44,7 @@ function Data.new(props)
 			local cell = DataCell.new(self, x, y)
 			cells:Set(x, y, cell)
 			cell.changed:Connect(function(newState)
-				self:onStateChanged(cell, newState)
+				onStateChanged(self, cell, newState)
 			end)
 		end
 	end
@@ -40,18 +52,6 @@ function Data.new(props)
 	setmetatable(self, Data)
 
 	return self
-end
-
-function Data:onStateChanged(cell, newState)
-	if newState == "open" then
-		self.cellsLeft -= 1
-	elseif newState == "flagged" then
-		self.setMinesLeft(self.minesLeft:getValue() - 1)
-	elseif newState == "closed" then
-		self.setMinesLeft(self.minesLeft:getValue() + 1)
-	end
-
-	self.cellChanged:Fire(cell)
 end
 
 return Data

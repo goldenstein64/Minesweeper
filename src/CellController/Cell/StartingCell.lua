@@ -28,6 +28,11 @@ local function StartingCell(props)
 			return ImageAssets.Cells.Closed
 		end),
 
+		[Roact.Event.MouseButton1Down] = function(_rbxButton)
+			local isClosed = props.data.state:getValue() == "closed"
+			_rbxButton.PressedImage = if isClosed then ImageAssets.Cells[0] else ""
+		end,
+
 		LayoutOrder = props.layoutOrder,
 
 		BackgroundTransparency = 1,

@@ -20,6 +20,12 @@
         "isDefault": true
       },
       "command": "rojo serve default.project.json"
+    },
+    {
+      "label": "Open Place",
+      "type": "shell",
+      "group": "test",
+      "command": "./build.rbxlx"
     }
   ]
 }

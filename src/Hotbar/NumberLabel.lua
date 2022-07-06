@@ -8,7 +8,7 @@ local function NumberLabel(props)
 	local labels = {}
 
 	labels.UIGridLayout = Roact.createElement("UIGridLayout", {
-		CellSize = UDim2.new(1 / props.places, 0, 1, 0),
+		CellSize = UDim2.new(1 / props.numDigits, 0, 1, 0),
 		CellPadding = UDim2.new(0, 0, 0, 0),
 		FillDirection = Enum.FillDirection.Horizontal,
 		SortOrder = Enum.SortOrder.LayoutOrder,
@@ -16,7 +16,7 @@ local function NumberLabel(props)
 		VerticalAlignment = Enum.VerticalAlignment.Center,
 	})
 
-	for i = 1, props.places do
+	for i = 1, props.numDigits do
 		local name = string.format("Digit1%s", string.rep("0", i - 1))
 		labels[name] = Roact.createElement("ImageButton", {
 			BackgroundTransparency = 1,

@@ -9,7 +9,7 @@ local GameLoop = require(app.GameLoop)
 
 local NumberLabel = require(script.NumberLabel)
 
-local PLACES = 3
+local NUM_DIGITS = 3
 
 local Hotbar = Roact.Component:extend("Hotbar")
 
@@ -43,11 +43,11 @@ function Hotbar:render()
 			BackgroundTransparency = 1,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
-				AspectRatio = PLACES * 13 / 23,
+				AspectRatio = NUM_DIGITS * 13 / 23,
 			}),
 			Label = Roact.createElement(NumberLabel, {
 				value = data.minesLeft,
-				places = PLACES,
+				numDigits = NUM_DIGITS,
 			}),
 		}),
 
@@ -76,11 +76,11 @@ function Hotbar:render()
 			BackgroundTransparency = 1,
 		}, {
 			UIAspectRatioConstraint = Roact.createElement("UIAspectRatioConstraint", {
-				AspectRatio = PLACES * 13 / 23,
+				AspectRatio = NUM_DIGITS * 13 / 23,
 			}),
 			Label = Roact.createElement(NumberLabel, {
 				value = data.time,
-				places = PLACES,
+				numDigits = NUM_DIGITS,
 			}),
 		}),
 	})

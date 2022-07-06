@@ -18,7 +18,7 @@ local offsets = {
 local function getSurroundingFlags(self)
 	local flaggedCount = 0
 
-	for _, neighbor in ipairs(self:getNeighbors()) do
+	for _, neighbor in self:getNeighbors() do
 		if neighbor.state:getValue() == "flagged" then
 			flaggedCount += 1
 		end
@@ -61,7 +61,7 @@ function DataCell:openSafeCells()
 		closedCells[currentCell] = true
 		openCells[currentCell] = nil
 
-		for _, neighbor in ipairs(currentCell:getNeighbors()) do
+		for _, neighbor in currentCell:getNeighbors() do
 			if closedCells[neighbor] or neighbor.state:getValue() == "open" then
 				continue
 			end
@@ -84,7 +84,7 @@ function DataCell:attemptOpenUnflaggedNeighbors()
 		return
 	end
 
-	for _, neighbor in ipairs(self:getNeighbors()) do
+	for _, neighbor in self:getNeighbors() do
 		if neighbor.state:getValue() == "closed" then
 			neighbor:setState("open")
 			if neighbor.surroundingMines == 0 then
@@ -96,7 +96,7 @@ end
 
 function DataCell:getNeighbors()
 	local neighbors = {}
-	for _, offset in ipairs(offsets) do
+	for _, offset in offsets do
 		local newPosition = self.position + offset
 
 		local cell = self.cells:Get(newPosition.X, newPosition.Y)

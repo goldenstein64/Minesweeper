@@ -20,7 +20,7 @@ local function Cell(props)
 	local newProps = {
 		layoutOrder = size.X * position.Y + position.X,
 	}
-	for k, v in pairs(props) do
+	for k, v in props do
 		newProps[k] = v
 	end
 

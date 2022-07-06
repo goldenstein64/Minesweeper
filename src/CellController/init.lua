@@ -27,8 +27,8 @@ function CellController:render()
 
 	local cellCollection = {}
 
-	for x, column in pairs(data.cells.Data) do
-		for y, cell in pairs(column) do
+	for x, column in data.cells.Data do
+		for y, cell in column do
 			local name = string.format("Cell_%02d_%02d", y, x)
 			cellCollection[name] = Roact.createElement(Cell, {
 				size = size,

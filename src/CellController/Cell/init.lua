@@ -5,12 +5,14 @@ local Roact = load("Roact")
 
 local StartingCell = require(script.StartingCell)
 local PlayingCell = require(script.PlayingCell)
-local FinishedCell = require(script.FinishedCell)
+local VictoryCell = require(script.VictoryCell)
+local DefeatCell = require(script.DefeatCell)
 
 local gameStateToCell = {
 	starting = StartingCell,
 	playing = PlayingCell,
-	finished = FinishedCell,
+	victory = VictoryCell,
+	defeat = DefeatCell,
 }
 
 local function Cell(props)

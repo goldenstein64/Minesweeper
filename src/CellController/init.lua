@@ -8,6 +8,76 @@ local GameLoop = require(app.GameLoop)
 
 local Cell = require(script.Cell)
 
+local gameStateMap = {}
+
+function gameStateMap.starting(self)
+	local data = self.props.data
+	self.cellChangedConn = data.cellChanged:Connect(function(cell)
+		if cell.state:getValue() == "open" then
+			self.cellChangedConn:Disconnect()
+			GameLoop.start(data, cell)
+			if data.cellsLeft == 0 then
+				GameLoop.finish(data, nil)
+				self:setState({
+					game = "finished",
+				})
+			else
+				self:setState({
+					game = "playing",
+				})
+			end
+		end
+	end)
+
+	return true
+end
+
+function gameStateMap.playing(self)
+	local data = self.props.data
+	self.cellChangedConn = data.cellChanged:Connect(function(cell)
+		if cell.state:getValue() == "open" then
+			if cell.hasMine then
+				self.cellChangedConn:Disconnect()
+				self.resetedConn:Disconnect()
+				GameLoop.finish(data, cell)
+				self:setState({
+					game = "defeat",
+				})
+			elseif data.cellsLeft == 0 then
+				self.cellChangedConn:Disconnect()
+				self.resetedConn:Disconnect()
+				GameLoop.finish(data, nil)
+				self:setState({
+					game = "victory"
+				})
+			end
+		end
+	end)
+
+	self.resetedConn = data.reseted:Connect(function()
+		self.cellChangedConn:Disconnect()
+		self.resetedConn:Disconnect()
+		self:setState({
+			game = "starting",
+		})
+	end)
+
+	return true
+end
+
+function gameStateMap.victory(self)
+	local data = self.props.data
+	self.resetedConn = data.reseted:Connect(function()
+		self.resetedConn:Disconnect()
+		self:setState({
+			game = "starting",
+		})
+	end)
+
+	return false
+end
+gameStateMap.defeat = gameStateMap.victory
+
 local CellController = Roact.Component:extend("CellController")
 
 CellController.defaultProps = {
@@ -48,54 +118,25 @@ function CellController:render()
 		end
 	end
 
-	if self.state.game == "starting" then
-		self.cellChangedConn = data.cellChanged:Connect(function(cell)
-			if cell.state:getValue() == "open" then
-				self.cellChangedConn:Disconnect()
-				GameLoop.start(data, cell)
-				if data.cellsLeft == 0 then
-					GameLoop.finish(data, nil)
-					self:setState({
-						game = "finished",
-					})
-				else
-					self:setState({
-						game = "playing",
-					})
-				end
-			end
-		end)
-	elseif self.state.game == "playing" then
-		self.cellChangedConn = data.cellChanged:Connect(function(cell)
-			if cell.state:getValue() == "open" then
-				if cell.hasMine or data.cellsLeft == 0 then
-					self.cellChangedConn:Disconnect()
-					self.resetedConn:Disconnect()
-					GameLoop.finish(data, cell.hasMine and cell or nil)
-					self:setState({
-						game = "finished",
-					})
-				end
-			end
-		end)
+	local handler = gameStateMap[self.state.game]
+	if not handler then
+		error(string.format("Unknown game state handler %q", self.state.game))
+	end
 
-		self.resetedConn = data.reseted:Connect(function()
-			self.cellChangedConn:Disconnect()
-			self.resetedConn:Disconnect()
-			self:setState({
-				game = "starting",
-			})
-		end)
-	elseif self.state.game == "finished" then
-		self.resetedConn = data.reseted:Connect(function()
-			self.resetedConn:Disconnect()
-			self:setState({
-				game = "starting",
-			})
-		end)
-
-		onInputBegan = nil
-		onInputEnded = nil
+	local shouldConnectInput = handler(self)
+	local onInputBegan, onInputEnded
+	if shouldConnectInput then
+		onInputBegan = function(_rbxFrame, input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				data.setFace("😮")
+			end
+		end
+	
+		onInputEnded = function(_rbxFrame, input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				data.setFace("🙂")
+			end
+		end
 	end
 
 	return Roact.createElement("Frame", {

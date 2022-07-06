@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local load = require(ReplicatedStorage.DepLoader)
 local Roact = load("Roact")
 
-local function FinishedCell(props)
+local function DefeatCell(props)
 	return Roact.createElement("TextButton", {
 		Text = props.data.state:map(function(state)
 			if state == "open" then
@@ -19,7 +19,7 @@ local function FinishedCell(props)
 					return "❌"
 				end
 			elseif state == "closed" and props.data.hasMine then
-				return "💣"
+				return props.unflaggedMine
 			elseif state == "mineHit" then
 				return "💣"
 			end
@@ -46,4 +46,4 @@ local function FinishedCell(props)
 	})
 end
 
-return FinishedCell
+return DefeatCell

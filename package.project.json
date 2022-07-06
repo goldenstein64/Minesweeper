@@ -1,6 +1,14 @@
 {
   "name": "Minesweeper",
   "tree": {
-    "$path": "src"
+    "$className": "Folder",
+
+    "Minesweeper": {
+      "$path": "src"
+    },
+
+    "DepLoader": {
+      "$path": "test/shared/DepLoader"
+    }
   }
 }

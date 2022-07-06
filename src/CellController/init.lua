@@ -27,15 +27,13 @@ function CellController:render()
 
 	local cellCollection = {}
 
-	for x, column in data.cells.Data do
-		for y, cell in column do
-			local name = string.format("Cell_%02d_%02d", y, x)
-			cellCollection[name] = Roact.createElement(Cell, {
-				size = size,
-				game = self.state.game,
-				data = cell,
-			})
-		end
+	for x, y, cell in data.cells do
+		local name = string.format("Cell_%02d_%02d", y, x)
+		cellCollection[name] = Roact.createElement(Cell, {
+			size = size,
+			game = self.state.game,
+			data = cell,
+		})
 	end
 
 	local function onInputBegan(_rbxFrame, input)

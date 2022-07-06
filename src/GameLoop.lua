@@ -66,12 +66,10 @@ function GameLoop.finish(data, finalCell)
 end
 
 function GameLoop.reset(data)
-	for _, column in data.cells.Data do
-		for _, cell in column do
-			cell.hasMine = false
-			cell.surroundingMines = 0
-			cell:setState("closed")
-		end
+	for _, _, cell in data.cells do
+		cell.hasMine = false
+		cell.surroundingMines = 0
+		cell:setState("closed")
 	end
 
 	if data.timerConn then

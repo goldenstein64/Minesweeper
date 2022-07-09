@@ -30,10 +30,12 @@ Next, open `build.rbxlx` in Roblox Studio and start the Rojo server:
 rojo serve
 ```
 
-If you want to build just the `Minesweeper` module from scratch (dependencies not included), use:
+If you want to build just the `Minesweeper` module from scratch (dependencies included), use:
 
 ```bash
-rojo build package.project.json -o "Minesweeper.rbxmx"
+rojo build package.project.json -o "Minesweeper.rbxm"
 ```
+
+This will produce a folder containing the `Minesweeper` module along with its dependencies under `DepLoader`. `Minesweeper` assumes that `DepLoader` is a direct child of `ReplicatedStorage`.
 
 For more help, check out [the Rojo documentation](https://rojo.space/docs).

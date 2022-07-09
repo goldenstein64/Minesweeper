@@ -1,7 +1,7 @@
 local ModuleInstances = {
 	Roact = script.Roact,
 	Event = script.Event,
-	Space = script.Space,
+	Array2D = script.Array2D,
 	Minesweeper = script.Minesweeper,
 }
 

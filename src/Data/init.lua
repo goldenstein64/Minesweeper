@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local load = require(ReplicatedStorage.DepLoader)
 local Roact = load("Roact")
 local Event = load("Event")
-local Space = load("Space")
+local Array2D = load("Array2D")
 
 local DataCell = require(script.DataCell)
 
@@ -24,12 +24,12 @@ function Data.new(props)
 	self.cellChanged = Event.new()
 	self.reseted = Event.new()
 
-	local cells = Space.new()
+	local cells = Array2D.new()
 	self.cells = cells
 	for x = 1, self.size.X do
 		for y = 1, self.size.Y do
 			local cell = DataCell.new(self, x, y)
-			cells:Set(x, y, cell)
+			cells:set(x, y, cell)
 			cell.changed:Connect(function(newState)
 				self:onStateChanged(cell, newState)
 			end)

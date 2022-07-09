@@ -99,7 +99,7 @@ function DataCell:getNeighbors()
 	for _, offset in offsets do
 		local newPosition = self.position + offset
 
-		local cell = self.cells:Get(newPosition.X, newPosition.Y)
+		local cell = self.cells:get(newPosition.X, newPosition.Y)
 		if not cell then
 			continue
 		end

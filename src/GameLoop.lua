@@ -2,7 +2,7 @@ local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-local Space = load("Space")
+local Array2D = load("Array2D")
 
 local R = Random.new()
 
@@ -21,12 +21,12 @@ function GameLoop.start(data, startingCell)
 	end)
 
 	local size = data.size
-	local openCellSet = Space.new()
+	local openCellSet = Array2D.new()
 
-	openCellSet:Set(startingCell.position.X, startingCell.position.Y, true)
+	openCellSet:set(startingCell.position.X, startingCell.position.Y, true)
 	for _, neighbor in startingCell:getNeighbors() do
 		local newPosition = neighbor.position
-		openCellSet:Set(newPosition.X, newPosition.Y, true)
+		openCellSet:set(newPosition.X, newPosition.Y, true)
 	end
 
 	for _i = 1, data.mineCount do
@@ -34,15 +34,15 @@ function GameLoop.start(data, startingCell)
 		repeat
 			x = R:NextInteger(1, size.X)
 			y = R:NextInteger(1, size.Y)
-		until not openCellSet:Get(x, y)
-		local cell = data.cells:Get(x, y)
+		until not openCellSet:get(x, y)
+		local cell = data.cells:get(x, y)
 		cell.hasMine = true
 
 		for _, neighbor in cell:getNeighbors() do
 			neighbor.surroundingMines += 1
 		end
 
-		openCellSet:Set(x, y, true)
+		openCellSet:set(x, y, true)
 	end
 
 	data.sideEffects = true

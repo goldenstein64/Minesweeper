@@ -1,8 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local player = Players.LocalPlayer
-local playerGui = player.PlayerGui
+local playerGui = Players.LocalPlayer.PlayerGui
 
 local load = require(ReplicatedStorage.DepLoader)
 local Roact = load("Roact")

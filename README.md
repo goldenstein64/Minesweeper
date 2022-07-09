@@ -12,30 +12,33 @@ Minesweeper is a puzzle game from the 1960s about clearing mines as fast as poss
 
 ## Usage
 
-This project is implemented using Roact, so you can also mount it to the PlayerGui using Roact. [`init.client.lua`](./test/client/init.client.lua) has a good starter implementation.
+`Minesweeper` is implemented as a Roact component, which means it is created using `Roact.createElement` and `Roact.mount`. [`init.client.lua`](./test/client/init.client.lua) has a good starter implementation.
+
+`Minesweeper` as a component uses two props:
+
+* `size: Vector2` - how wide and tall the board should be
+* `mineCount: number` - how many mines exist in this area
 
 ## Getting Started
 
-This place is built using [Rojo](https://rojo.space/) 6.2.0.
+This project is developed using [Rojo](https://rojo.space/) 7.2.1.
 
-To build the place from scratch, use:
+To build the place from scratch, you can use the Rojo CLI.
 
 ```bash
-rojo build -o "build.rbxlx"
+rojo build -o "MinesweeperTest.rbxl"
 ```
 
-Next, open `build.rbxlx` in Roblox Studio and start the Rojo server:
+Next, open `MinesweeperTest.rbxl` in Roblox Studio and start the Rojo server.
 
 ```bash
 rojo serve
 ```
 
-If you want to build just the `Minesweeper` module from scratch (dependencies included), use:
+If you want to build the `Minesweeper` module from scratch with dependencies, use:
 
 ```bash
-rojo build package.project.json -o "Minesweeper.rbxm"
+rojo build package.project.json -o "MinesweeperExports.rbxm"
 ```
 
-This will produce a folder containing the `Minesweeper` module along with its dependencies under `DepLoader`. `Minesweeper` assumes that `DepLoader` is a direct child of `ReplicatedStorage`.
-
-For more help, check out [the Rojo documentation](https://rojo.space/docs).
+This will produce a folder named `MinesweeperExports`, which includes a `Minesweeper` and `DepLoader` module script. `DepLoader` exists as a simple abstraction of `Minesweeper`'s dependencies and is meant to be parented directly under `ReplicatedStorage`. If you already use its dependencies elsewhere in your project, you can replace their path in `DepLoader`.

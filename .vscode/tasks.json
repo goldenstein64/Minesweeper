@@ -10,7 +10,7 @@
         "kind": "build",
         "isDefault": true
       },
-      "command": "rojo build default.project.json -o build.rbxlx"
+      "command": "rojo build default.project.json -o MinesweeperTest.rbxl"
     }
   ]
 }

@@ -6,8 +6,7 @@ local playerGui = player.PlayerGui
 
 local load = require(ReplicatedStorage.DepLoader)
 local Roact = load("Roact")
-
-local Minesweeper = require(ReplicatedStorage.Minesweeper) -- ./src
+local Minesweeper = load("Minesweeper")
 
 local presets = {
 	easy = {
@@ -30,14 +29,10 @@ local presets = {
 
 local gameElement = Roact.createElement(Minesweeper, presets.easy)
 
-local hostElement = Roact.createElement("ScreenGui", nil, {
-	ParentFrame = Roact.createElement("Frame", {
-		Size = UDim2.new(1, 0, 1, 0),
-		Position = UDim2.new(0.5, 0, 0.5, 0),
-		AnchorPoint = Vector2.new(0.5, 0.5),
-	}, {
-		Minesweeper = gameElement,
-	}),
+local host = Roact.createElement("ScreenGui", nil, {
+  ParentFrame = Roact.createElement("Frame", {
+    Size = UDim2.new(1, 0, 1, 0),
+  }, { Game = gameElement }),
 })
 
-Roact.mount(hostElement, playerGui)
+Roact.mount(host, playerGui, "MinesweeperGui")

@@ -15,11 +15,11 @@
 
         "Event": {
           "$path": "modules/GoodSignal/GoodSignal.lua"
-        }
-      },
+        },
 
-      "Minesweeper": {
-        "$path": "src"
+        "Minesweeper": {
+          "$path": "src"
+        }
       }
     },
 

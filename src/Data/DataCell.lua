@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
-local Event = load("Event")
+local GoodSignal = load("GoodSignal")
 local Roact = load("Roact")
 
 local offsets = {
@@ -37,7 +37,7 @@ function DataCell.new(data, x, y)
 		hasMine = false,
 		surroundingMines = 0,
 		position = Vector2.new(x, y),
-		changed = Event.new(),
+		changed = GoodSignal.new(),
 	}
 
 	self.state, self.setRawState = Roact.createBinding("closed")

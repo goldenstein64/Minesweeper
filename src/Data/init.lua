@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local load = require(ReplicatedStorage.DepLoader)
 local Roact = load("Roact")
-local Event = load("Event")
+local GoodSignal = load("GoodSignal")
 local Array2D = load("Array2D")
 
 local DataCell = require(script.DataCell)
@@ -21,8 +21,8 @@ function Data.new(props)
 	self.time, self.setTime = Roact.createBinding(0)
 	self.face, self.setFace = Roact.createBinding("🙂")
 
-	self.cellChanged = Event.new()
-	self.reseted = Event.new()
+	self.cellChanged = GoodSignal.new()
+	self.reseted = GoodSignal.new()
 
 	local cells = Array2D.new()
 	self.cells = cells

@@ -1,0 +1,15 @@
+{
+	"roactComponent": {
+		"prefix": "roactComponent",
+		"body": [
+			"local $1 = Roact.Component:extend(\"$1\")",
+			"",
+			"function $1:render()",
+			"\t$0",
+			"end",
+			"",
+			"return $1"
+		],
+		"description": "Create a new Roact component"
+	},
+}
